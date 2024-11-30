@@ -18,8 +18,6 @@ public class ExpenseService {
 
     private final ExpenseMapper expenseMapper;
     private final ExpenseRepository expenseRepository;
-    private final CategoryRepository categoryRepository;
-    private final PaymentMethodRepository paymentMethodRepository;
 
     public String createExpense(ExpenseDto expenseDto){
         return expenseRepository.insert(expenseMapper.toDomain(expenseDto));
@@ -30,6 +28,6 @@ public class ExpenseService {
     }
 
     public List<ExpenseDto> getExpensesByPaymentMethod(PaymentMethod paymentMethod){
-        return expenseRepository.findByPaymentMethodId(paymentMethod.id()).stream().map(expenseMapper::toDto).toList();
+        return expenseRepository.findByPaymentMethodId(paymentMethod.getId()).stream().map(expenseMapper::toDto).toList();
     }
 }

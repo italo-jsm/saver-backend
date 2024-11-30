@@ -1,7 +1,9 @@
 package com.example.demo.domain.model;
 
-public record PaymentMethod(
-        String id,
-        String name
-) {
+import lombok.Data;
+
+@Data
+public class PaymentMethod {
+    private String id;
+    private String name;
 }
