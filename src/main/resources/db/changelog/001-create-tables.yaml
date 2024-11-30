@@ -1,0 +1,255 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: "seu-nome"
+      changes:
+        - createTable:
+            tableName: "product"
+            columns:
+              - column:
+                  name: "sku"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "name"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "description"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: "italo"
+      changes:
+        - addColumn:
+            tableName: "product"
+            columns:
+              - column:
+                  name: "measuring_unit"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: 3
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "batch"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "product_id"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "quantity"
+                  type: "DECIMAL"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "amount"
+                  type: "DECIMAL(19, 4)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "entrance_date"
+                  type: "date"
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: batch
+            baseColumnNames: product_id
+            constraintName: fk_batch_product
+            referencedTableName: product
+            referencedColumnNames: sku
+
+  - changeSet:
+      id: 1
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "expense"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "amount"
+                  type: "DECIMAL"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "description"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "commercial_establishment_name"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "installments"
+                  type: "NUMBER"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "expense_date"
+                  type: "date"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 5
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "payment-method"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "name"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 6
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "category"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "name"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 7
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "vehicle"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "name"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 8
+      author: "italo"
+      changes:
+        - addColumn:
+            tableName: "expense"
+            columns:
+              - column:
+                  name: "category_id"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: true
+              - column:
+                  name: "payment-method_id"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: expense
+            baseColumnNames: category_id
+            constraintName: fk_expense_category
+            referencedTableName: category
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: expense
+            baseColumnNames: payment-method_id
+            constraintName: fk_expense_payment-method
+            referencedTableName: payment-method
+            referencedColumnNames: id
+
+  - changeSet:
+      id: 9
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "refuel"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "vehicle_id"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "expense_id"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "fuel"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "liters"
+                  type: "DECIMAL"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "mileage"
+                  type: "NUMBER"
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: refuel
+            baseColumnNames: vehicle_id
+            constraintName: fk_refuel_vehicle
+            referencedTableName: vehicle
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: refuel
+            baseColumnNames: expense_id
+            constraintName: fk_refuel_expense
+            referencedTableName: expense
+            referencedColumnNames: id
