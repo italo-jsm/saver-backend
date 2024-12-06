@@ -7,6 +7,8 @@ import java.time.LocalDate;
 public record ExpenseDto(
         String id,
         LocalDate expenseDate,
+        LocalDate firstPayment,
+        LocalDate lastPayment,
         BigDecimal amount,
         String description,
         String commercialEstablishmentName,

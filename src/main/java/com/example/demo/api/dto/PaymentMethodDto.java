@@ -1,7 +1,9 @@
 package com.example.demo.api.dto;
 
-public record PaymentMethodDto(
-        String id,
-        String name
-) {
+import lombok.Data;
+
+@Data
+public class PaymentMethodDto{
+    private String id;
+    private String name;
 }

@@ -6,8 +6,12 @@ import com.example.demo.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.time.Month;
+import java.time.YearMonth;
+import java.util.List;
 
 @RestController
 @RequestMapping("/expenses")
@@ -29,4 +33,24 @@ public class ExpenseController {
                         .orElseThrow(() -> new ResourceNotFoundException("Expense not found", id, ExpenseDto.class.getName()))
                 );
     }
+
+    @GetMapping("/by-month")
+    @CrossOrigin("*")
+    public ResponseEntity<List<ExpenseDto>> getExpensesByMonth(@RequestParam int month, @RequestParam int year) {
+        return ResponseEntity
+                .ok(expenseService.getExpensesByMonthAndYear(month, year));
+    }
+
+    @GetMapping
+    @CrossOrigin("*")
+    public ResponseEntity<List<ExpenseDto>> getAll() {
+        return ResponseEntity
+                .ok(expenseService.getAll());
+    }
+
+    @GetMapping("/by-credit-card")
+    public ResponseEntity<List<ExpenseDto>> getByCreditCardAndMonth(@RequestParam String creditCardId, @RequestParam YearMonth reference){
+        return ResponseEntity.ok(expenseService.getInvoiceSummary(creditCardId, reference));
+    }
+
 }

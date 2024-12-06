@@ -1,11 +1,11 @@
-package com.example.demo.domain.model;
+package com.example.demo.api.dto;
 
 import com.example.demo.enums.BillState;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public record Bill(
+public record BillDto(
         String id,
         BigDecimal amount,
         LocalDate dueDate,

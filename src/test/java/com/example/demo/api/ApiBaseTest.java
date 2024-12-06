@@ -1,4 +1,4 @@
-package com.example.demo.e2e.api;
+package com.example.demo.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;

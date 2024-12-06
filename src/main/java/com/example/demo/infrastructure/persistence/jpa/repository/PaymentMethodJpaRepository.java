@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Repository
@@ -24,5 +25,10 @@ public class PaymentMethodJpaRepository implements PaymentMethodRepository {
     @Override
     public String insert(PaymentMethod paymentMethod) {
         return paymentMethodDao.save(paymentMethodEntityMapper.toEntity(paymentMethod)).getId();
+    }
+
+    @Override
+    public Optional<PaymentMethod> findById(String id) {
+        return paymentMethodDao.findById(id).map(paymentMethodEntityMapper::toDomain);
     }
 }

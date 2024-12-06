@@ -116,24 +116,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-  - changeSet:
-      id: 5
-      author: "italo"
-      changes:
-        - createTable:
-            tableName: "payment-method"
-            columns:
-              - column:
-                  name: "id"
-                  type: "varchar(255)"
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: "name"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: false
 
   - changeSet:
       id: 6
@@ -253,3 +235,89 @@ databaseChangeLog:
             constraintName: fk_refuel_expense
             referencedTableName: expense
             referencedColumnNames: id
+
+  - changeSet:
+      id: 10
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "bill"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "description"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "amount"
+                  type: "DECIMAL"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "due_date"
+                  type: "date"
+                  constraints:
+                    nullable: false
+
+
+  - changeSet:
+      id: 12
+      author: "italo"
+      changes:
+        - addColumn:
+            tableName: "payment-method"
+            columns:
+              - column:
+                  name: "invoice_closing_day"
+                  type: "integer"
+              - column:
+                  name: "invoice_due_day"
+                  type: "integer"
+              - column:
+                  name: "business_day_closing"
+                  type: "boolean"
+
+  - changeSet:
+      id: 13
+      author: "italo"
+      changes:
+        - addColumn:
+            tableName: "bill"
+            columns:
+              - column:
+                  name: "state"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 14
+      author: "italo"
+      changes:
+        - addColumn:
+            tableName: "expense"
+            columns:
+              - column:
+                  name: "first_payment"
+                  type: "date"
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: 15
+      author: "italo"
+      changes:
+        - addColumn:
+            tableName: "expense"
+            columns:
+              - column:
+                  name: "last_payment"
+                  type: "date"
+                  constraints:
+                    nullable: true
