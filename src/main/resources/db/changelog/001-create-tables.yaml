@@ -321,3 +321,16 @@ databaseChangeLog:
                   type: "date"
                   constraints:
                     nullable: true
+
+  - changeSet:
+      id: 17
+      author: "bill"
+      changes:
+        - addColumn:
+            tableName: "bill"
+            columns:
+              - column:
+                  name: "file_path"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: true

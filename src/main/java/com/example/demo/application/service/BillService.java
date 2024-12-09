@@ -2,8 +2,8 @@ package com.example.demo.application.service;
 
 import com.example.demo.api.dto.BillDto;
 import com.example.demo.application.mapper.BillMapper;
-import com.example.demo.domain.model.Bill;
 import com.example.demo.domain.repository.BillRepository;
+import com.example.demo.enums.BillState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,8 @@ public class BillService {
     private final BillMapper billMapper;
 
     public String saveBill(BillDto bill){
-        return billRepository.createBill(billMapper.toDomain(bill));
+
+        return billRepository.createBill(billMapper.toDomain(new BillDto(bill.id(), bill.amount(), bill.dueDate(), bill.description(), bill.filePath(), BillState.TO_EXPIRE)));
     }
 
     public List<BillDto> getAll(){

@@ -15,6 +15,7 @@ public class BillEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private String id;
+    private String filePath;
     private BigDecimal amount;
     private LocalDate dueDate;
     private String description;

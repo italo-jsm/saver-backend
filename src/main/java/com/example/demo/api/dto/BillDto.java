@@ -10,6 +10,7 @@ public record BillDto(
         BigDecimal amount,
         LocalDate dueDate,
         String description,
+        String filePath,
         BillState state
 ) {
 }
