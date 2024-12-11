@@ -25,4 +25,9 @@ public class BillJpaRepository implements BillRepository {
     public List<Bill> getAll() {
         return billDao.findAll().stream().map(billEntityMapper::toDomain).toList();
     }
+
+    @Override
+    public List<Bill> findByPaymentMonthAndYear(int month, int year) {
+        return billDao.findByBillMonthAndYear(month, year).stream().map(billEntityMapper::toDomain).toList();
+    }
 }

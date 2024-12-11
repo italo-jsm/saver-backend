@@ -1,6 +1,7 @@
 package com.example.demo.application.service;
 
 import com.example.demo.api.dto.BillDto;
+import com.example.demo.api.dto.ExpenseDto;
 import com.example.demo.application.mapper.BillMapper;
 import com.example.demo.domain.repository.BillRepository;
 import com.example.demo.enums.BillState;
@@ -22,5 +23,9 @@ public class BillService {
 
     public List<BillDto> getAll(){
         return billRepository.getAll().stream().map(billMapper::toDto).toList();
+    }
+
+    public List<BillDto> getBillsByMonthAndYear(int month, int year){
+        return billRepository.findByPaymentMonthAndYear(month, year).stream().map(billMapper::toDto).toList();
     }
 }

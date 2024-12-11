@@ -1,6 +1,7 @@
 package com.example.demo.api.controller;
 
 import com.example.demo.api.dto.BillDto;
+import com.example.demo.api.dto.ExpenseDto;
 import com.example.demo.application.service.BillService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import javax.print.attribute.standard.Media;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -47,6 +49,13 @@ public class BillController {
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
         }
+    }
+
+    @GetMapping("/by-month")
+    @CrossOrigin("*")
+    public ResponseEntity<List<BillDto>> getBillsByMonthAndYear(@RequestParam int month, @RequestParam int year) {
+        return ResponseEntity
+                .ok(billService.getBillsByMonthAndYear(month, year));
     }
 
 }

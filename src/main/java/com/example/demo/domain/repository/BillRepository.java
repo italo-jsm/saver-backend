@@ -7,4 +7,5 @@ import java.util.List;
 public interface BillRepository {
     String createBill(Bill bill);
     List<Bill> getAll();
+    List<Bill> findByPaymentMonthAndYear(int month, int year);
 }
