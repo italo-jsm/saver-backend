@@ -2,6 +2,7 @@ package com.example.demo.application.service;
 
 import com.example.demo.api.dto.PaymentMethodDto;
 import com.example.demo.application.mapper.PaymentMethodMapper;
+import com.example.demo.domain.model.PaymentMethod;
 import com.example.demo.domain.repository.PaymentMethodRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class PaymentMethodService {
     }
 
     public List<PaymentMethodDto> getAll(){
-        return paymentMethodRepository.findAll().stream().map(paymentMethodMapper::toDto).toList();
+        List<PaymentMethod> all = paymentMethodRepository.findAll();
+        return all.stream().map(paymentMethodMapper::toDto).toList();
     }
 }

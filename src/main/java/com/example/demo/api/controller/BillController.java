@@ -29,6 +29,7 @@ public class BillController {
         return ResponseEntity.created(URI.create(billService.saveBill(billDto))).build();
     }
 
+
     @GetMapping
     public ResponseEntity<?> getAll(){
         return ResponseEntity.ok(billService.getAll());

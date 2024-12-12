@@ -3,6 +3,7 @@ package com.example.demo.infrastructure.persistence.jpa.repository;
 import com.example.demo.domain.model.PaymentMethod;
 import com.example.demo.domain.repository.PaymentMethodRepository;
 import com.example.demo.infrastructure.persistence.jpa.dao.PaymentMethodDao;
+import com.example.demo.infrastructure.persistence.jpa.entity.PaymentMethodEntity;
 import com.example.demo.infrastructure.persistence.jpa.mapper.PaymentMethodEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,8 @@ public class PaymentMethodJpaRepository implements PaymentMethodRepository {
 
     @Override
     public List<PaymentMethod> findAll() {
-        return paymentMethodDao.findAll().stream().map(paymentMethodEntityMapper::toDomain).toList();
+        List<PaymentMethodEntity> all = paymentMethodDao.findAll();
+        return all.stream().map(paymentMethodEntityMapper::toDomain).toList();
     }
 
     @Override
@@ -29,6 +31,7 @@ public class PaymentMethodJpaRepository implements PaymentMethodRepository {
 
     @Override
     public Optional<PaymentMethod> findById(String id) {
-        return paymentMethodDao.findById(id).map(paymentMethodEntityMapper::toDomain);
+        Optional<PaymentMethodEntity> byId = paymentMethodDao.findById(id);
+        return byId.map(paymentMethodEntityMapper::toDomain);
     }
 }

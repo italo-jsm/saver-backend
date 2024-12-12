@@ -6,4 +6,6 @@ import lombok.Data;
 public class PaymentMethodDto{
     private String id;
     private String name;
+    private Integer invoiceClosingDay;
+    private Integer invoiceDueDay;
 }

@@ -3,6 +3,7 @@ package com.example.demo.infrastructure.persistence.jpa.repository;
 import com.example.demo.domain.model.Bill;
 import com.example.demo.domain.repository.BillRepository;
 import com.example.demo.infrastructure.persistence.jpa.dao.BillDao;
+import com.example.demo.infrastructure.persistence.jpa.entity.BillEntity;
 import com.example.demo.infrastructure.persistence.jpa.mapper.BillEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -28,6 +29,7 @@ public class BillJpaRepository implements BillRepository {
 
     @Override
     public List<Bill> findByPaymentMonthAndYear(int month, int year) {
-        return billDao.findByBillMonthAndYear(month, year).stream().map(billEntityMapper::toDomain).toList();
+        List<BillEntity> byBillMonthAndYear = billDao.findByBillMonthAndYear(month, year);
+        return byBillMonthAndYear.stream().map(billEntityMapper::toDomain).toList();
     }
 }

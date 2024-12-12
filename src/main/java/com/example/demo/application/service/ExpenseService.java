@@ -4,8 +4,8 @@ import com.example.demo.api.dto.ExpenseDto;
 import com.example.demo.application.mapper.ExpenseMapper;
 import com.example.demo.domain.model.Expense;
 import com.example.demo.domain.model.PaymentMethod;
-import com.example.demo.domain.repository.CreditCardRepository;
 import com.example.demo.domain.repository.ExpenseRepository;
+import com.example.demo.domain.repository.PaymentMethodRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class ExpenseService {
 
     private final ExpenseMapper expenseMapper;
     private final ExpenseRepository expenseRepository;
-    private final CreditCardRepository creditCardRepository;
+    private final PaymentMethodRepository paymentMethodRepository;
 
     public List<ExpenseDto> getAll(){
         return expenseRepository.findAll().stream().map(expenseMapper::toDto).toList();
@@ -29,7 +29,7 @@ public class ExpenseService {
         Expense expense = expenseMapper.toDomain(expenseDto);
         expense.setLastPayment(expenseDto.expenseDate());
         expense.setFirstPayment(expenseDto.expenseDate());
-        creditCardRepository.findById(expenseDto.paymentMethod().getId())
+        paymentMethodRepository.findById(expenseDto.paymentMethod().getId())
                 .ifPresent(paymentMethod -> {
                     expense.setFirstPayment(paymentMethod.firstPaymentDate(expenseDto.expenseDate()));
                     expense.setLastPayment(paymentMethod.firstPaymentDate(expenseDto.expenseDate()).plusMonths(expenseDto.installments() - 1));

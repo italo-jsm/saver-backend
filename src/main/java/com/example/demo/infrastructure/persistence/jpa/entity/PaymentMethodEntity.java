@@ -8,13 +8,17 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "payment-method")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("PaymentMethod")
 public class PaymentMethodEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private String id;
     private String name;
+    private Integer invoiceClosingDay;
+    private Integer invoiceDueDay;
+    private boolean businessDayClosing;
+
+    public boolean getBusinessDayClosing() {
+        return this.businessDayClosing;
+    }
 }

@@ -334,3 +334,12 @@ databaseChangeLog:
                   type: "varchar(255)"
                   constraints:
                     nullable: true
+  - changeSet:
+      id: 18
+      author: italo
+      changes:
+        - dropColumn:
+            tableName: "payment-method"
+            columns:
+              - column:
+                  name: dtype

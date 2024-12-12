@@ -3,11 +3,13 @@ package com.example.demo.application.service;
 import com.example.demo.api.dto.BillDto;
 import com.example.demo.api.dto.ExpenseDto;
 import com.example.demo.application.mapper.BillMapper;
+import com.example.demo.domain.model.Bill;
 import com.example.demo.domain.repository.BillRepository;
 import com.example.demo.enums.BillState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,8 +19,20 @@ public class BillService {
     private final BillMapper billMapper;
 
     public String saveBill(BillDto bill){
+        BillState billState = bill.getState();
+        if(bill.getState() != BillState.PAYED){
+            if(bill.getDueDate().isEqual(LocalDate.now())){
+                billState = BillState.DUE_TODAY;
+            }
+            if(bill.getDueDate().isBefore(LocalDate.now())){
+                billState = BillState.LATE;
+            }
+        }
+        return billRepository.createBill(billMapper.toDomain(new BillDto(bill.getId(), bill.getAmount(), bill.getDueDate(), bill.getDescription(), bill.getFilePath(), billState)));
+    }
 
-        return billRepository.createBill(billMapper.toDomain(new BillDto(bill.id(), bill.amount(), bill.dueDate(), bill.description(), bill.filePath(), BillState.TO_EXPIRE)));
+    public String updateBill(BillDto billDto){
+        return "";
     }
 
     public List<BillDto> getAll(){
@@ -26,6 +40,7 @@ public class BillService {
     }
 
     public List<BillDto> getBillsByMonthAndYear(int month, int year){
-        return billRepository.findByPaymentMonthAndYear(month, year).stream().map(billMapper::toDto).toList();
+        List<Bill> byPaymentMonthAndYear = billRepository.findByPaymentMonthAndYear(month, year);
+        return byPaymentMonthAndYear.stream().map(billMapper::toDto).toList();
     }
 }
