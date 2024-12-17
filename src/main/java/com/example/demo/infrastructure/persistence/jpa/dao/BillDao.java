@@ -13,4 +13,6 @@ public interface BillDao extends JpaRepository<BillEntity, String> {
             "AND EXTRACT(YEAR FROM due_date) = :year",
             nativeQuery = true)
     List<BillEntity> findByBillMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+    List<BillEntity> findByCreditCardId(String creditCardId);
 }

@@ -1,12 +1,14 @@
 package com.example.demo.domain.model;
 
 import com.example.demo.enums.BillState;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class Bill {
     private String id;
     private BigDecimal amount;
@@ -14,5 +16,5 @@ public class Bill {
     private String description;
     private String filePath;
     private BillState state;
-    private boolean creditCardInvoice;
+    private String creditCardId;
 }

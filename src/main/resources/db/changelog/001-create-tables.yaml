@@ -356,3 +356,26 @@ databaseChangeLog:
                   type: "boolean"
                   constraints:
                     nullable: true
+
+  - changeSet:
+      id: 20
+      author: italo
+      changes:
+        - dropColumn:
+            tableName: "bill"
+            columns:
+              - column:
+                  name: credit_card_invoice
+
+  - changeSet:
+      id: 21
+      author: "bill"
+      changes:
+        - addColumn:
+            tableName: "bill"
+            columns:
+              - column:
+                  name: "credit_card_id"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: true

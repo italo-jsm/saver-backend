@@ -24,4 +24,8 @@ public class PaymentMethodService {
         List<PaymentMethod> all = paymentMethodRepository.findAll();
         return all.stream().map(paymentMethodMapper::toDto).toList();
     }
+
+    public PaymentMethodDto getById(String id){
+        return paymentMethodRepository.findById(id).map(paymentMethodMapper::toDto).orElseThrow();
+    }
 }

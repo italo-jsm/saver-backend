@@ -32,4 +32,9 @@ public class BillJpaRepository implements BillRepository {
         List<BillEntity> byBillMonthAndYear = billDao.findByBillMonthAndYear(month, year);
         return byBillMonthAndYear.stream().map(billEntityMapper::toDomain).toList();
     }
+
+    @Override
+    public List<Bill> findBillsByCreditCardId(String creditCardId) {
+        return billDao.findByCreditCardId(creditCardId).stream().map(billEntityMapper::toDomain).toList();
+    }
 }

@@ -43,4 +43,8 @@ public class BillService {
         List<Bill> byPaymentMonthAndYear = billRepository.findByPaymentMonthAndYear(month, year);
         return byPaymentMonthAndYear.stream().map(billMapper::toDto).toList();
     }
+
+    public List<BillDto> getBillsByCreditCardId(String creditCardId){
+        return billRepository.findBillsByCreditCardId(creditCardId).stream().map(billMapper::toDto).toList();
+    }
 }
