@@ -14,4 +14,5 @@ public class Bill {
     private String description;
     private String filePath;
     private BillState state;
+    private boolean creditCardInvoice;
 }

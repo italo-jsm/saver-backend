@@ -343,3 +343,16 @@ databaseChangeLog:
             columns:
               - column:
                   name: dtype
+
+  - changeSet:
+      id: 19
+      author: "bill"
+      changes:
+        - addColumn:
+            tableName: "bill"
+            columns:
+              - column:
+                  name: "credit_card_invoice"
+                  type: "boolean"
+                  constraints:
+                    nullable: true

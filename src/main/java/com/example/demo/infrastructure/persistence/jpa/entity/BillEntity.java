@@ -20,4 +20,9 @@ public class BillEntity {
     private LocalDate dueDate;
     private String description;
     private BillState state;
+    private boolean creditCardInvoice;
+
+    public boolean getCreditCardInvoice() {
+        return creditCardInvoice;
+    }
 }
