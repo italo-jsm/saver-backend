@@ -8,7 +8,9 @@ import com.example.demo.infrastructure.persistence.jpa.mapper.BillEntityMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -36,5 +38,10 @@ public class BillJpaRepository implements BillRepository {
     @Override
     public List<Bill> findBillsByCreditCardId(String creditCardId) {
         return billDao.findByCreditCardId(creditCardId).stream().map(billEntityMapper::toDomain).toList();
+    }
+
+    @Override
+    public Optional<Bill> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate) {
+        return billEntityMapper.toDomain(billDao.findByCreditCardIdAndDueDate(creditCardId, dueDate));
     }
 }

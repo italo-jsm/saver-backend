@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,5 +47,9 @@ public class BillService {
 
     public List<BillDto> getBillsByCreditCardId(String creditCardId){
         return billRepository.findBillsByCreditCardId(creditCardId).stream().map(billMapper::toDto).toList();
+    }
+
+    public Optional<BillDto> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate){
+        return billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate).map(billMapper::toDto);
     }
 }

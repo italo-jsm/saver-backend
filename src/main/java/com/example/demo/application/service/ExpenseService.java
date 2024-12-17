@@ -30,6 +30,7 @@ public class ExpenseService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final PaymentMethodService paymentMethodService;
     private final BillService billService;
+    private final InvoiceService invoiceService;
 
     public List<ExpenseDto> getAll(){
         return expenseRepository.findAll().stream().map(expenseMapper::toDto).toList();
@@ -49,22 +50,29 @@ public class ExpenseService {
     }
 
     private void updateBills(Expense expense){
-        List<BillDto> bills = billService.getBillsByCreditCardId(expense.getPaymentMethod().getId());
-        PaymentMethodDto creditCard = paymentMethodService.getById(expense.getId());
-        if(bills.isEmpty()){
-            LocalDate firstPayment = expense.getFirstPayment();
-            while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
-                Bill bill = Bill.builder()
-                        .state(BillState.TO_EXPIRE)
-                        .amount(BigDecimal.ZERO)
-                        .description("Fatura do " + creditCard.getName())
-                        .creditCardId(creditCard.getId())
-                        .dueDate(firstPayment)
-                        .build();
-                billService.saveBill(billMapper.toDto(bill));
-                firstPayment = firstPayment.plusMonths(1);
-            }
+        PaymentMethodDto creditCard = paymentMethodService.getById(expense.getPaymentMethod().getId());
+        LocalDate firstPayment = expense.getFirstPayment();
+        while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
+            BillDto billToUpdate = billToUpdate(creditCard, firstPayment);
+            billToUpdate.setAmount(invoiceService.createInvoice(creditCard.getId(), firstPayment.getMonth().getValue(), firstPayment.getYear()).getAmount());
+            billService.saveBill(billToUpdate);
+            firstPayment = firstPayment.plusMonths(1);
         }
+    }
+
+    private BillDto billToUpdate(PaymentMethodDto creditCard, LocalDate dueDate){
+        return billService.findBillByCreditCardIdAndDueDate(creditCard.getId(), dueDate).orElseGet(() -> {
+            Bill bill = Bill.builder()
+                    .state(BillState.TO_EXPIRE)
+                    .amount(BigDecimal.ZERO)
+                    .description("Fatura do " + creditCard.getName())
+                    .creditCardId(creditCard.getId())
+                    .dueDate(dueDate)
+                    .build();
+            String id = billService.saveBill(billMapper.toDto(bill));
+            bill.setId(id);
+            return billMapper.toDto(bill);
+        });
     }
 
     public Optional<ExpenseDto> getExpenseById(String id) {
