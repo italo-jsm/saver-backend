@@ -49,14 +49,20 @@ public class ExpenseService {
         return expenseRepository.insert(expense);
     }
 
+//    public void updateBillsWithAllExistingExpenses(){
+//        expenseRepository.findAll().forEach(this::updateBills);
+//    }
+
     private void updateBills(Expense expense){
         PaymentMethodDto creditCard = paymentMethodService.getById(expense.getPaymentMethod().getId());
-        LocalDate firstPayment = expense.getFirstPayment();
-        while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
-            BillDto billToUpdate = billToUpdate(creditCard, firstPayment);
-            billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
-            billService.saveBill(billToUpdate);
-            firstPayment = firstPayment.plusMonths(1);
+        if(creditCard.isCreditCard()){
+            LocalDate firstPayment = expense.getFirstPayment();
+            while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
+                BillDto billToUpdate = billToUpdate(creditCard, firstPayment);
+                billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                billService.saveBill(billToUpdate);
+                firstPayment = firstPayment.plusMonths(1);
+            }
         }
     }
 

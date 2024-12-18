@@ -8,4 +8,10 @@ public class PaymentMethodDto{
     private String name;
     private Integer invoiceClosingDay;
     private Integer invoiceDueDay;
+
+    public boolean isCreditCard(){
+        if(this.invoiceClosingDay == null){
+            return false;
+        }else return this.invoiceClosingDay != 0;
+    }
 }
