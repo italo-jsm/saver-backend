@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class CreditCardInvoiceDto {
     private PaymentMethodDto creditCard;
-    private List<ExpenseDto> invoiceExpenses;
+    private List<CreditCardExpenseDto> invoiceExpenses;
     private LocalDate dueDate;
     private BigDecimal amount;
 }
