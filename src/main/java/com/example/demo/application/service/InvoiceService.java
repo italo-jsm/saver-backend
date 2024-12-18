@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -28,7 +29,7 @@ public class InvoiceService {
                     .invoiceExpenses(invoiceSummary)
                     .creditCard(paymentMethodDto)
                     .dueDate(LocalDate.of(year, month, paymentMethodDto.getInvoiceDueDay()))
-                    .amount(invoiceSummary.stream().map(it -> it.amount().divide(BigDecimal.valueOf(it.installments()))).reduce(BigDecimal::add).orElseThrow())
+                    .amount(invoiceSummary.stream().map(it -> it.amount().divide(BigDecimal.valueOf(it.installments()), RoundingMode.CEILING)).reduce(BigDecimal::add).orElseThrow())
                     .build();
         }
     }

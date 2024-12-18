@@ -14,9 +14,9 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
     @GetMapping()
-    public ResponseEntity<CreditCardInvoiceDto> getInvoiceByMonthAndYearAndCreditCard(@RequestParam String creditCard,
+    public ResponseEntity<CreditCardInvoiceDto> getInvoiceByMonthAndYearAndCreditCard(@RequestParam String creditCardId,
                                                                                       @RequestParam int month,
                                                                                       @RequestParam int year) {
-        return ResponseEntity.ok(invoiceService.createInvoice(creditCard,month, year));
+        return ResponseEntity.ok(invoiceService.createInvoice(creditCardId, month, year));
     }
 }
