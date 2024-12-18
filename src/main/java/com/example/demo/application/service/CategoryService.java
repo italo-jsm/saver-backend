@@ -3,6 +3,7 @@ package com.example.demo.application.service;
 import com.example.demo.api.dto.CategoryDto;
 
 import com.example.demo.application.mapper.CategoryMapper;
+import com.example.demo.domain.model.Category;
 import com.example.demo.domain.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,13 +15,12 @@ import java.util.List;
 public class CategoryService{
 
     private final CategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
 
-    public String createCategory(CategoryDto categoryDto){
-        return categoryRepository.insert(categoryMapper.toDomain(categoryDto));
+    public String createCategory(Category category){
+        return categoryRepository.insert(category);
     }
 
-    public List<CategoryDto> getAll(){
-        return categoryRepository.findAll().stream().map(categoryMapper::toDto).toList();
+    public List<Category> getAll(){
+        return categoryRepository.findAll();
     }
 }
