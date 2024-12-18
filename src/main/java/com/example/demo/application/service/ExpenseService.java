@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -30,7 +31,6 @@ public class ExpenseService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final PaymentMethodService paymentMethodService;
     private final BillService billService;
-    private final InvoiceService invoiceService;
 
     public List<ExpenseDto> getAll(){
         return expenseRepository.findAll().stream().map(expenseMapper::toDto).toList();
@@ -54,7 +54,7 @@ public class ExpenseService {
         LocalDate firstPayment = expense.getFirstPayment();
         while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
             BillDto billToUpdate = billToUpdate(creditCard, firstPayment);
-            billToUpdate.setAmount(invoiceService.createInvoice(creditCard.getId(), firstPayment.getMonth().getValue(), firstPayment.getYear()).getAmount());
+            billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
             billService.saveBill(billToUpdate);
             firstPayment = firstPayment.plusMonths(1);
         }
@@ -68,6 +68,7 @@ public class ExpenseService {
                     .description("Fatura do " + creditCard.getName())
                     .creditCardId(creditCard.getId())
                     .dueDate(dueDate)
+                    .creditCardId(creditCard.getId())
                     .build();
             String id = billService.saveBill(billMapper.toDto(bill));
             bill.setId(id);

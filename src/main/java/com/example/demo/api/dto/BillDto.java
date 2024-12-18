@@ -18,4 +18,5 @@ public class BillDto {
     private String description;
     private String filePath;
     private BillState state;
+    private String creditCardId;
 }

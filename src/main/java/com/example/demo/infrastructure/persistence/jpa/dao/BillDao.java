@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface BillDao extends JpaRepository<BillEntity, String> {
     @Query(value = "SELECT * FROM bill " +
@@ -16,5 +17,5 @@ public interface BillDao extends JpaRepository<BillEntity, String> {
     List<BillEntity> findByBillMonthAndYear(@Param("month") int month, @Param("year") int year);
 
     List<BillEntity> findByCreditCardId(String creditCardId);
-    BillEntity findByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate);
+    Optional<BillEntity> findByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate);
 }

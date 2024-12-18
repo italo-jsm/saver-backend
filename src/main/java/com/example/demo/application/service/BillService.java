@@ -29,7 +29,7 @@ public class BillService {
                 billState = BillState.LATE;
             }
         }
-        return billRepository.createBill(billMapper.toDomain(new BillDto(bill.getId(), bill.getAmount(), bill.getDueDate(), bill.getDescription(), bill.getFilePath(), billState)));
+        return billRepository.createBill(billMapper.toDomain(new BillDto(bill.getId(), bill.getAmount(), bill.getDueDate(), bill.getDescription(), bill.getFilePath(), billState, bill.getCreditCardId())));
     }
 
     public String updateBill(BillDto billDto){
@@ -50,6 +50,7 @@ public class BillService {
     }
 
     public Optional<BillDto> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate){
-        return billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate).map(billMapper::toDto);
+        Optional<BillDto> billDto = billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate).map(billMapper::toDto);
+        return billDto;
     }
 }
