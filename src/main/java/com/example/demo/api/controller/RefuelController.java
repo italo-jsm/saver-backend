@@ -1,6 +1,5 @@
 package com.example.demo.api.controller;
 
-import com.example.demo.api.dto.ProductDto;
 import com.example.demo.api.dto.RefuelDto;
 import com.example.demo.application.service.RefuelService;
 import com.example.demo.exceptions.ResourceNotFoundException;
@@ -25,7 +24,7 @@ public class RefuelController {
     @GetMapping("/{id}")
     public ResponseEntity<RefuelDto> getRefuel(@PathVariable String id){
         return ResponseEntity.ok(refuelService.getRefuelById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Product Not Found", id, ProductDto.class.getName()))
+                .orElseThrow(() -> new ResourceNotFoundException("Product Not Found", id, RefuelDto.class.getName()))
         );
     }
 }
