@@ -19,7 +19,6 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @PostMapping
-    @CrossOrigin("*")
     public ResponseEntity<?> createExpense(@RequestBody ExpenseDto expenseDto){
         return ResponseEntity.created(URI.create(expenseService.createExpense(expenseDto))).build();
     }
@@ -33,14 +32,12 @@ public class ExpenseController {
     }
 
     @GetMapping("/by-month")
-    @CrossOrigin("*")
     public ResponseEntity<List<ExpenseDto>> getExpensesByMonthAndYear(@RequestParam int month, @RequestParam int year) {
         return ResponseEntity
                 .ok(expenseService.getExpensesByMonthAndYear(month, year));
     }
 
     @GetMapping
-    @CrossOrigin("*")
     public ResponseEntity<List<ExpenseDto>> getAll() {
         return ResponseEntity
                 .ok(expenseService.getAll());

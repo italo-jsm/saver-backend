@@ -1,6 +1,7 @@
 package com.example.demo.api.controller;
 
 import com.example.demo.api.dto.AuthRequest;
+import com.example.demo.api.dto.AuthResponse;
 import com.example.demo.application.service.UserService;
 import com.example.demo.config.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +25,11 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    @CrossOrigin("*")
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
-            return ResponseEntity.created(URI.create(jwtUtil.generateToken(authentication.getName()))).build();
+            return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(authentication.getName())));
         } catch (AuthenticationException e) {
             throw new RuntimeException("Credenciais inválidas");
         }

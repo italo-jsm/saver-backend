@@ -21,7 +21,6 @@ public class VehicleController {
     }
 
     @GetMapping
-    @CrossOrigin("*")
     public ResponseEntity<List<VehicleDto>> getAllVehicles(){
         return ResponseEntity.ok(vehicleService.getAll());
     }

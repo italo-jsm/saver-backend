@@ -22,13 +22,11 @@ public class PaymentMethodController {
     }
 
     @GetMapping
-    @CrossOrigin("*")
     public ResponseEntity<List<PaymentMethodDto>> getAllPaymentMethods(){
         return ResponseEntity.ok(paymentMethodService.getAll());
     }
 
     @GetMapping("/credit-card")
-    @CrossOrigin("*")
     public ResponseEntity<List<PaymentMethodDto>> getCreditCards(){
         return ResponseEntity.ok(paymentMethodService.getAll().stream().filter(PaymentMethodDto::isCreditCard).toList());
     }

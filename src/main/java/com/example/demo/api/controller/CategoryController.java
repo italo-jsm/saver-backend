@@ -26,7 +26,6 @@ public class CategoryController {
     }
 
     @GetMapping
-    @CrossOrigin("*")
     public ResponseEntity<List<CategoryDto>> getAllCategories() throws FileNotFoundException {
         return ResponseEntity.ok(categoryService.getAll().stream().map(categoryMapper::toDto).toList());
     }

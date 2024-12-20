@@ -36,7 +36,6 @@ public class BillController {
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @CrossOrigin("*")
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty");
@@ -53,7 +52,6 @@ public class BillController {
     }
 
     @GetMapping("/by-month")
-    @CrossOrigin("*")
     public ResponseEntity<List<BillDto>> getBillsByMonthAndYear(@RequestParam int month, @RequestParam int year) {
         return ResponseEntity
                 .ok(billService.getBillsByMonthAndYear(month, year));
