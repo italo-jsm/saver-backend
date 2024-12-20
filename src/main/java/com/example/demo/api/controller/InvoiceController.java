@@ -17,7 +17,6 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
     @GetMapping()
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<CreditCardInvoiceDto> getInvoiceByMonthAndYearAndCreditCard(@AuthenticationPrincipal UserDetails userDetails,
                                                                                       @RequestParam String creditCardId,
                                                                                       @RequestParam int month,
