@@ -379,3 +379,90 @@ databaseChangeLog:
                   type: "varchar(255)"
                   constraints:
                     nullable: true
+
+  - changeSet:
+      id: 22
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "system_user"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "username"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "password"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 23
+      author: "italo"
+      changes:
+        - dropTable:
+            tableName: system_user
+
+  - changeSet:
+      id: 24
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "user"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "password"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 25
+      author: "italo"
+      changes:
+        - dropTable:
+            tableName: user
+
+  - changeSet:
+      id: 26
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "systemuser"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "password"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
