@@ -49,10 +49,6 @@ public class ExpenseService {
         return expenseRepository.insert(expense);
     }
 
-//    public void updateBillsWithAllExistingExpenses(){
-//        expenseRepository.findAll().forEach(this::updateBills);
-//    }
-
     private void updateBills(Expense expense){
         PaymentMethodDto creditCard = paymentMethodService.getById(expense.getPaymentMethod().getId());
         if(creditCard.isCreditCard()){
