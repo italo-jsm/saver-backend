@@ -2,7 +2,9 @@ package com.example.demo.api.controller;
 
 import com.example.demo.api.dto.BillDto;
 import com.example.demo.api.dto.ExpenseDto;
+import com.example.demo.api.dto.response.CreatedResponse;
 import com.example.demo.application.service.BillService;
+import com.example.demo.domain.model.Bill;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,36 +20,37 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/bills")
+@RequestMapping("/api/bills")
 @AllArgsConstructor
 public class BillController {
 
     private final BillService billService;
 
     @PostMapping
-    public ResponseEntity<?> saveBill(@RequestBody BillDto billDto){
-        return ResponseEntity.created(URI.create(billService.saveBill(billDto))).build();
+    public ResponseEntity<CreatedResponse> saveBill(@RequestBody BillDto billDto){
+        String resourceId = billService.saveBill(billDto);
+        return ResponseEntity.created(URI.create(resourceId)).body(CreatedResponse.withResourceId(resourceId));
     }
 
 
     @GetMapping
-    public ResponseEntity<?> getAll(){
+    public ResponseEntity<List<BillDto>> getAll(){
         return ResponseEntity.ok(billService.getAll());
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<CreatedResponse> handleFileUpload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("File is empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(CreatedResponse.withError("File is empty"));
         }
 
         try {
             String filename = "bills-" + UUID.randomUUID().toString();
             File uploadedFile = new File(System.getProperty("user.dir") + "/saver-docs/bills/"  + filename);
             file.transferTo(uploadedFile);
-            return ResponseEntity.created(URI.create(filename)).build();
+            return ResponseEntity.created(URI.create(filename)).body(CreatedResponse.withFileName(filename));
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(CreatedResponse.withError("Failed to upload file"));
         }
     }
 

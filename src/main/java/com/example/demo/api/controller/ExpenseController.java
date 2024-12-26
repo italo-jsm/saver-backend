@@ -1,6 +1,7 @@
 package com.example.demo.api.controller;
 
 import com.example.demo.api.dto.ExpenseDto;
+import com.example.demo.api.dto.response.CreatedResponse;
 import com.example.demo.application.service.ExpenseService;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -12,15 +13,16 @@ import java.time.YearMonth;
 import java.util.List;
 
 @RestController
-@RequestMapping("/expenses")
+@RequestMapping("/api/expenses")
 @AllArgsConstructor
 public class ExpenseController {
 
     private final ExpenseService expenseService;
 
     @PostMapping
-    public ResponseEntity<?> createExpense(@RequestBody ExpenseDto expenseDto){
-        return ResponseEntity.created(URI.create(expenseService.createExpense(expenseDto))).build();
+    public ResponseEntity<CreatedResponse> createExpense(@RequestBody ExpenseDto expenseDto){
+        String expenseId = expenseService.createExpense(expenseDto);
+        return ResponseEntity.created(URI.create(expenseId)).body(new CreatedResponse(CreatedResponse.RESOURCE_ID, expenseId));
     }
 
     @GetMapping("/{id}")

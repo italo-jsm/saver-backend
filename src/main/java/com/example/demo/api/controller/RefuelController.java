@@ -1,6 +1,7 @@
 package com.example.demo.api.controller;
 
 import com.example.demo.api.dto.RefuelDto;
+import com.example.demo.api.dto.response.CreatedResponse;
 import com.example.demo.application.service.RefuelService;
 import com.example.demo.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -10,15 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/refuels")
+@RequestMapping("/api/refuels")
 @AllArgsConstructor
 public class RefuelController {
 
     private RefuelService refuelService;
 
     @PostMapping
-    public ResponseEntity<?> saveRefuel(@RequestBody RefuelDto refuelDto){
-        return ResponseEntity.created(URI.create(refuelService.save(refuelDto))).build();
+    public ResponseEntity<CreatedResponse> saveRefuel(@RequestBody RefuelDto refuelDto){
+        String refuelId = refuelService.save(refuelDto);
+        return ResponseEntity.created(URI.create(refuelId)).body(new CreatedResponse(CreatedResponse.RESOURCE_ID, refuelId));
     }
 
     @GetMapping("/{id}")

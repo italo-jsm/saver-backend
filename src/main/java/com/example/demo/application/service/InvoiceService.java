@@ -31,7 +31,11 @@ public class InvoiceService {
                     .invoiceExpenses(invoiceSummary.stream().map(expenseDto -> CreditCardExpenseDto.fromExpense(expenseDto, month, year)).toList())
                     .creditCard(paymentMethodDto)
                     .dueDate(LocalDate.of(year, month, paymentMethodDto.getInvoiceDueDay()))
-                    .amount(invoiceSummary.stream().map(it -> it.amount().divide(BigDecimal.valueOf(it.installments()), RoundingMode.CEILING)).reduce(BigDecimal::add).orElseThrow())
+                    .amount(invoiceSummary
+                            .stream()
+                            .map(it -> it.amount().divide(BigDecimal.valueOf(it.installments()), RoundingMode.CEILING))
+                            .reduce(BigDecimal::add)
+                            .orElseGet(() -> BigDecimal.ZERO))
                     .build();
         }
     }

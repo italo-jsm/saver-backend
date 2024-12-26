@@ -1,6 +1,7 @@
 package com.example.demo.api.controller;
 
 import com.example.demo.api.dto.PaymentMethodDto;
+import com.example.demo.api.dto.response.CreatedResponse;
 import com.example.demo.application.service.PaymentMethodService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/payment-methods")
+@RequestMapping("/api/payment-methods")
 @AllArgsConstructor
 public class PaymentMethodController {
 
@@ -18,7 +19,8 @@ public class PaymentMethodController {
 
     @PostMapping
     public ResponseEntity<?> savePaymentMethod(@RequestBody PaymentMethodDto paymentMethodDto){
-        return ResponseEntity.created(URI.create(paymentMethodService.createPaymentMethod(paymentMethodDto))).build();
+        String paymentMethodId = paymentMethodService.createPaymentMethod(paymentMethodDto);
+        return ResponseEntity.created(URI.create(paymentMethodId)).body(new CreatedResponse(CreatedResponse.RESOURCE_ID, paymentMethodId));
     }
 
     @GetMapping
