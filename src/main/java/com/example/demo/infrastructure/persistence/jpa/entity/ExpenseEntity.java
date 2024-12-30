@@ -2,19 +2,17 @@ package com.example.demo.infrastructure.persistence.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Fetch;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "expense")
-public class ExpenseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    private String id;
+public class ExpenseEntity extends AbstractEntity{
     LocalDate expenseDate;
     LocalDate firstPayment;
     LocalDate lastPayment;

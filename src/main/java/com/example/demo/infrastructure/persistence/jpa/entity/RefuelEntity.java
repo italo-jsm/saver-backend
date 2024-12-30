@@ -3,17 +3,15 @@ package com.example.demo.infrastructure.persistence.jpa.entity;
 import com.example.demo.enums.Fuel;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "refuel")
-public class RefuelEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    private String id;
+public class RefuelEntity extends AbstractEntity{
     @ManyToOne
     @JoinColumn(name = "expense_id", nullable = false)
     private ExpenseEntity expense;

@@ -3,18 +3,16 @@ package com.example.demo.infrastructure.persistence.jpa.entity;
 import com.example.demo.enums.BillState;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "bill")
-public class BillEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    private String id;
+public class BillEntity extends AbstractEntity{
     private String filePath;
     private BigDecimal amount;
     private LocalDate dueDate;

@@ -2,16 +2,12 @@ package com.example.demo.infrastructure.persistence.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table(name = "vehicle")
-public class VehicleEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    private String id;
-
+public class VehicleEntity extends AbstractEntity{
     private String name;
 }
