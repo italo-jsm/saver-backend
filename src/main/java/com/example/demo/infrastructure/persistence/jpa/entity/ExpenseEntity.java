@@ -24,6 +24,6 @@ public class ExpenseEntity extends AbstractEntity{
     @JoinColumn(name = "category_id", nullable = false)
     CategoryEntity categoryEntity;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "payment-method_id", nullable = false)
+    @JoinColumn(name = "paymentmethod_id", nullable = false)
     PaymentMethodEntity paymentMethodEntity;
 }

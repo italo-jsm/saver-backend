@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,21 +21,17 @@ public class BillService {
     private final BillMapper billMapper;
 
     public String saveBill(BillDto bill){
-        BillState billState = bill.getState();
         if(bill.getState() != BillState.PAYED){
             if(bill.getDueDate().isEqual(LocalDate.now())){
-                billState = BillState.DUE_TODAY;
+                bill.setState(BillState.DUE_TODAY);
             }
             if(bill.getDueDate().isBefore(LocalDate.now())){
-                billState = BillState.LATE;
+                bill.setState(BillState.LATE);
             }
         }
-        return billRepository.createBill(billMapper.toDomain(new BillDto(bill.getId(), bill.getAmount(), bill.getDueDate(), bill.getDescription(), bill.getFilePath(), billState, bill.getCreditCardId())));
+        return billRepository.createBill(billMapper.toDomain(bill));
     }
 
-    public String updateBill(BillDto billDto){
-        return "";
-    }
 
     public List<BillDto> getAll(){
         return billRepository.getAll().stream().map(billMapper::toDto).toList();
@@ -52,5 +49,9 @@ public class BillService {
     public Optional<BillDto> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate){
         Optional<BillDto> billDto = billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate).map(billMapper::toDto);
         return billDto;
+    }
+
+    public List<BillDto> findByDueDateBetween(LocalDate begin, LocalDate end) {
+        return new ArrayList<>();
     }
 }

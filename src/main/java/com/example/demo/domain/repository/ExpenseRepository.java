@@ -2,7 +2,6 @@ package com.example.demo.domain.repository;
 
 import com.example.demo.domain.model.Expense;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;

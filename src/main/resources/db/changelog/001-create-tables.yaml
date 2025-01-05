@@ -1,81 +1,4 @@
 databaseChangeLog:
-  - changeSet:
-      id: 1
-      author: "seu-nome"
-      changes:
-        - createTable:
-            tableName: "product"
-            columns:
-              - column:
-                  name: "sku"
-                  type: "varchar(255)"
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: "name"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: false
-              - column:
-                  name: "description"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: false
-
-  - changeSet:
-      id: 2
-      author: "italo"
-      changes:
-        - addColumn:
-            tableName: "product"
-            columns:
-              - column:
-                  name: "measuring_unit"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: true
-
-  - changeSet:
-      id: 3
-      author: "italo"
-      changes:
-        - createTable:
-            tableName: "batch"
-            columns:
-              - column:
-                  name: "id"
-                  type: "varchar(255)"
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: "product_id"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: false
-              - column:
-                  name: "quantity"
-                  type: "DECIMAL"
-                  constraints:
-                    nullable: false
-              - column:
-                  name: "amount"
-                  type: "DECIMAL(19, 4)"
-                  constraints:
-                    nullable: false
-              - column:
-                  name: "entrance_date"
-                  type: "date"
-                  constraints:
-                    nullable: false
-
-        - addForeignKeyConstraint:
-            baseTableName: batch
-            baseColumnNames: product_id
-            constraintName: fk_batch_product
-            referencedTableName: product
-            referencedColumnNames: sku
 
   - changeSet:
       id: 1
@@ -115,10 +38,68 @@ databaseChangeLog:
                   type: "date"
                   constraints:
                     nullable: false
-
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
 
   - changeSet:
-      id: 6
+      id: 2
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "paymentmethod"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "name"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
       author: "italo"
       changes:
         - createTable:
@@ -135,9 +116,46 @@ databaseChangeLog:
                   type: "varchar(255)"
                   constraints:
                     nullable: false
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
 
   - changeSet:
-      id: 7
+      id: 4
+      author: "italo"
+      changes:
+        - addColumn:
+            tableName: "paymentmethod"
+            columns:
+              - column:
+                  name: "invoice_closing_day"
+                  type: "integer"
+              - column:
+                  name: "invoice_due_day"
+                  type: "integer"
+              - column:
+                  name: "business_day_closing"
+                  type: "boolean"
+
+  - changeSet:
+      id: 5
       author: "italo"
       changes:
         - createTable:
@@ -154,9 +172,29 @@ databaseChangeLog:
                   type: "varchar(255)"
                   constraints:
                     nullable: false
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
 
   - changeSet:
-      id: 8
+      id: 6
       author: "italo"
       changes:
         - addColumn:
@@ -168,7 +206,7 @@ databaseChangeLog:
                   constraints:
                     nullable: true
               - column:
-                  name: "payment-method_id"
+                  name: "paymentmethod_id"
                   type: "varchar(255)"
                   constraints:
                     nullable: true
@@ -180,13 +218,13 @@ databaseChangeLog:
             referencedColumnNames: id
         - addForeignKeyConstraint:
             baseTableName: expense
-            baseColumnNames: payment-method_id
-            constraintName: fk_expense_payment-method
-            referencedTableName: payment-method
+            baseColumnNames: paymentmethod_id
+            constraintName: fk_expense_paymentmethod
+            referencedTableName: paymentmethod
             referencedColumnNames: id
 
   - changeSet:
-      id: 9
+      id: 7
       author: "italo"
       changes:
         - createTable:
@@ -223,6 +261,26 @@ databaseChangeLog:
                   type: "NUMBER"
                   constraints:
                     nullable: false
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
         - addForeignKeyConstraint:
             baseTableName: refuel
             baseColumnNames: vehicle_id
@@ -237,7 +295,7 @@ databaseChangeLog:
             referencedColumnNames: id
 
   - changeSet:
-      id: 10
+      id: 8
       author: "italo"
       changes:
         - createTable:
@@ -264,27 +322,29 @@ databaseChangeLog:
                   type: "date"
                   constraints:
                     nullable: false
-
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
 
   - changeSet:
-      id: 12
-      author: "italo"
-      changes:
-        - addColumn:
-            tableName: "payment-method"
-            columns:
-              - column:
-                  name: "invoice_closing_day"
-                  type: "integer"
-              - column:
-                  name: "invoice_due_day"
-                  type: "integer"
-              - column:
-                  name: "business_day_closing"
-                  type: "boolean"
-
-  - changeSet:
-      id: 13
+      id: 9
       author: "italo"
       changes:
         - addColumn:
@@ -297,7 +357,7 @@ databaseChangeLog:
                     nullable: false
 
   - changeSet:
-      id: 14
+      id: 10
       author: "italo"
       changes:
         - addColumn:
@@ -310,7 +370,7 @@ databaseChangeLog:
                     nullable: true
 
   - changeSet:
-      id: 15
+      id: 11
       author: "italo"
       changes:
         - addColumn:
@@ -323,7 +383,7 @@ databaseChangeLog:
                     nullable: true
 
   - changeSet:
-      id: 17
+      id: 12
       author: "bill"
       changes:
         - addColumn:
@@ -334,18 +394,9 @@ databaseChangeLog:
                   type: "varchar(255)"
                   constraints:
                     nullable: true
-  - changeSet:
-      id: 18
-      author: italo
-      changes:
-        - dropColumn:
-            tableName: "payment-method"
-            columns:
-              - column:
-                  name: dtype
 
   - changeSet:
-      id: 19
+      id: 14
       author: "bill"
       changes:
         - addColumn:
@@ -358,7 +409,7 @@ databaseChangeLog:
                     nullable: true
 
   - changeSet:
-      id: 20
+      id: 15
       author: italo
       changes:
         - dropColumn:
@@ -368,7 +419,7 @@ databaseChangeLog:
                   name: credit_card_invoice
 
   - changeSet:
-      id: 21
+      id: 16
       author: "bill"
       changes:
         - addColumn:
@@ -381,70 +432,7 @@ databaseChangeLog:
                     nullable: true
 
   - changeSet:
-      id: 22
-      author: "italo"
-      changes:
-        - createTable:
-            tableName: "system_user"
-            columns:
-              - column:
-                  name: "id"
-                  type: "varchar(255)"
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: "username"
-                  type: "varchar(255)"
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: "password"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: false
-
-  - changeSet:
-      id: 23
-      author: "italo"
-      changes:
-        - dropTable:
-            tableName: system_user
-
-  - changeSet:
-      id: 24
-      author: "italo"
-      changes:
-        - createTable:
-            tableName: "user"
-            columns:
-              - column:
-                  name: "id"
-                  type: "varchar(255)"
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: "username"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: false
-              - column:
-                  name: "password"
-                  type: "varchar(255)"
-                  constraints:
-                    nullable: false
-
-  - changeSet:
-      id: 25
-      author: "italo"
-      changes:
-        - dropTable:
-            tableName: user
-
-  - changeSet:
-      id: 26
+      id: 21
       author: "italo"
       changes:
         - createTable:
@@ -464,5 +452,80 @@ databaseChangeLog:
               - column:
                   name: "password"
                   type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 22
+      author: "italo"
+      changes:
+        - createTable:
+            tableName: "income"
+            columns:
+              - column:
+                  name: "id"
+                  type: "varchar(255)"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "description"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "due_date"
+                  type: "date"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "amount"
+                  type: "DECIMAL"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "end_date"
+                  type: "date"
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: "created_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_by_username"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "TIMESTAMP"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "TIMESTAMP"
                   constraints:
                     nullable: false

@@ -11,7 +11,9 @@ import com.example.demo.domain.model.PaymentMethod;
 import com.example.demo.domain.repository.ExpenseRepository;
 import com.example.demo.domain.repository.PaymentMethodRepository;
 import com.example.demo.enums.BillState;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,6 +25,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ExpenseService {
 
     private final ExpenseMapper expenseMapper;
@@ -31,12 +34,14 @@ public class ExpenseService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final PaymentMethodService paymentMethodService;
     private final BillService billService;
+    private final ObjectMapper jsonMapper = new ObjectMapper();
 
     public List<ExpenseDto> getAll(){
         return expenseRepository.findAll().stream().map(expenseMapper::toDto).toList();
     }
 
     public String createExpense(ExpenseDto expenseDto) {
+        log.info("Creating expense {}", expenseDto);
         Expense expense = expenseMapper.toDomain(expenseDto);
         expense.setLastPayment(expenseDto.expenseDate());
         expense.setFirstPayment(expenseDto.expenseDate());
@@ -56,6 +61,7 @@ public class ExpenseService {
             while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
                 BillDto billToUpdate = billToUpdate(creditCard, firstPayment);
                 billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                log.info("Updating bill {}", billToUpdate);
                 billService.saveBill(billToUpdate);
                 firstPayment = firstPayment.plusMonths(1);
             }

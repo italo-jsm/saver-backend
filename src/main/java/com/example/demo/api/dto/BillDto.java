@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +20,8 @@ public class BillDto {
     private String filePath;
     private BillState state;
     private String creditCardId;
+    private String createdByUsername;
+    private String updatedByUsername;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

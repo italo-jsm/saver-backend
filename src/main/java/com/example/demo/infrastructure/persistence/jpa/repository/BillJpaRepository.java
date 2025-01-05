@@ -21,7 +21,8 @@ public class BillJpaRepository implements BillRepository {
 
     @Override
     public String createBill(Bill bill) {
-        return billDao.save(billEntityMapper.toEntity(bill)).getId();
+        BillEntity entity = billEntityMapper.toEntity(bill);
+        return billDao.save(entity).getId();
     }
 
     @Override
