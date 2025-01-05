@@ -1,8 +1,5 @@
 package com.example.demo.application.service;
 
-import com.example.demo.api.dto.BillDto;
-import com.example.demo.api.dto.ExpenseDto;
-import com.example.demo.application.mapper.BillMapper;
 import com.example.demo.domain.model.Bill;
 import com.example.demo.domain.repository.BillRepository;
 import com.example.demo.enums.BillState;
@@ -18,9 +15,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BillService {
     private final BillRepository billRepository;
-    private final BillMapper billMapper;
 
-    public String saveBill(BillDto bill){
+    public Bill saveBill(Bill bill){
         if(bill.getState() != BillState.PAYED){
             if(bill.getDueDate().isEqual(LocalDate.now())){
                 bill.setState(BillState.DUE_TODAY);
@@ -29,29 +25,28 @@ public class BillService {
                 bill.setState(BillState.LATE);
             }
         }
-        return billRepository.createBill(billMapper.toDomain(bill));
+        return billRepository.createBill(bill);
     }
 
 
-    public List<BillDto> getAll(){
-        return billRepository.getAll().stream().map(billMapper::toDto).toList();
+    public List<Bill> getAll(){
+        return billRepository.getAll();
     }
 
-    public List<BillDto> getBillsByMonthAndYear(int month, int year){
-        List<Bill> byPaymentMonthAndYear = billRepository.findByPaymentMonthAndYear(month, year);
-        return byPaymentMonthAndYear.stream().map(billMapper::toDto).toList();
+    public List<Bill> getBillsByMonthAndYear(int month, int year){
+        return billRepository.findByPaymentMonthAndYear(month, year);
     }
 
-    public List<BillDto> getBillsByCreditCardId(String creditCardId){
-        return billRepository.findBillsByCreditCardId(creditCardId).stream().map(billMapper::toDto).toList();
+    public List<Bill> getBillsByCreditCardId(String creditCardId){
+        return billRepository.findBillsByCreditCardId(creditCardId);
     }
 
-    public Optional<BillDto> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate){
-        Optional<BillDto> billDto = billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate).map(billMapper::toDto);
-        return billDto;
+    public Optional<Bill> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate){
+        return  billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate);
     }
 
-    public List<BillDto> findByDueDateBetween(LocalDate begin, LocalDate end) {
+    public List<Bill> findByDueDateBetween(LocalDate begin, LocalDate end) {
+        //TODO
         return new ArrayList<>();
     }
 }

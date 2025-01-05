@@ -2,7 +2,6 @@ package com.example.demo.application.service;
 
 import com.example.demo.domain.model.SystemUser;
 import com.example.demo.domain.repository.SystemUserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,9 +1,9 @@
 package com.example.demo.application.service;
 
-import com.example.demo.api.dto.CreditCardExpenseDto;
-import com.example.demo.api.dto.CreditCardInvoiceDto;
-import com.example.demo.api.dto.ExpenseDto;
-import com.example.demo.api.dto.PaymentMethodDto;
+import com.example.demo.domain.model.CreditCardExpense;
+import com.example.demo.domain.model.CreditCardInvoice;
+import com.example.demo.domain.model.Expense;
+import com.example.demo.domain.model.PaymentMethod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +19,21 @@ public class InvoiceService {
     private final ExpenseService expenseService;
     private final PaymentMethodService paymentMethodService;
 
-    public CreditCardInvoiceDto createInvoice(String creditCardId, Integer month, Integer year){
-        PaymentMethodDto paymentMethodDto = paymentMethodService.getById(creditCardId);
-        if(paymentMethodDto.getInvoiceClosingDay() == null){
+    public CreditCardInvoice createInvoice(String creditCardId, Integer month, Integer year){
+        PaymentMethod paymentMethod = paymentMethodService.getById(creditCardId);
+        if(paymentMethod.getInvoiceClosingDay() == null){
             throw new RuntimeException("Payment Method Must Be a Credit Card!");
         }else{
-            List<ExpenseDto> invoiceSummary = expenseService.getInvoiceSummary(creditCardId, YearMonth.of(year, month));
+            List<Expense> invoiceSummary = expenseService.getInvoiceSummary(creditCardId, YearMonth.of(year, month));
 
-            return CreditCardInvoiceDto
+            return CreditCardInvoice
                     .builder()
-                    .invoiceExpenses(invoiceSummary.stream().map(expenseDto -> CreditCardExpenseDto.fromExpense(expenseDto, month, year)).toList())
-                    .creditCard(paymentMethodDto)
-                    .dueDate(LocalDate.of(year, month, paymentMethodDto.getInvoiceDueDay()))
+                    .invoiceExpenses(invoiceSummary.stream().map(expense -> CreditCardExpense.fromExpense(expense, month, year)).toList())
+                    .creditCard(paymentMethod)
+                    .dueDate(LocalDate.of(year, month, paymentMethod.getInvoiceDueDay()))
                     .amount(invoiceSummary
                             .stream()
-                            .map(it -> it.amount().divide(BigDecimal.valueOf(it.installments()), RoundingMode.CEILING))
+                            .map(it -> it.getAmount().divide(BigDecimal.valueOf(it.getInstallments()), RoundingMode.CEILING))
                             .reduce(BigDecimal::add)
                             .orElseGet(() -> BigDecimal.ZERO))
                     .build();

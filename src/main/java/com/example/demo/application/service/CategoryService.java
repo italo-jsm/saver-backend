@@ -1,8 +1,5 @@
 package com.example.demo.application.service;
 
-import com.example.demo.api.dto.CategoryDto;
-
-import com.example.demo.application.mapper.CategoryMapper;
 import com.example.demo.domain.model.Category;
 import com.example.demo.domain.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
