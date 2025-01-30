@@ -13,4 +13,5 @@ public class CreditCardExpenseDto {
     private String description;
     private BigDecimal amount;
     private LocalDate expenseDate;
+    private PaymentMethodDto paymentMethodDto;
 }

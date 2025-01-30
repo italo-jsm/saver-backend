@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class Income {
     private String description;
     private LocalDate endDate;
-    private String dueData;
+    private LocalDate dueDate;
     private BigDecimal amount;
 
     public boolean isRecurring(){

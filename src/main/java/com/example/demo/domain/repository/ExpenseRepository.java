@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface ExpenseRepository {
     String insert(Expense expense);
+    void delete(Expense expense);
     Optional<Expense> findById(String id);
     List<Expense> findByPaymentMethodId(String paymentMethodId);
     List<Expense> findByPaymentMonthAndYear(int month, int year);

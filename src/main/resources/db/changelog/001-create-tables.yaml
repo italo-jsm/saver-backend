@@ -529,3 +529,12 @@ databaseChangeLog:
                   type: "TIMESTAMP"
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: 23
+      author: "italo"
+      changes:
+        - dropNotNullConstraint:
+            tableName: "income"
+            columnName: "end_date"
+            columnDataType: "date"

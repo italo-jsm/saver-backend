@@ -13,6 +13,7 @@ public class CreditCardExpense {
     private String description;
     private BigDecimal amount;
     private LocalDate expenseDate;
+    private PaymentMethod paymentMethod;
 
     public static CreditCardExpense fromExpense(Expense expense, Integer month, Integer year){
         String describedDescription = "";
@@ -32,6 +33,7 @@ public class CreditCardExpense {
                 .expenseDate(expense.getExpenseDate())
                 .amount(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING))
                 .description(describedDescription)
+                .paymentMethod(expense.getPaymentMethod())
                 .build();
     }
 }

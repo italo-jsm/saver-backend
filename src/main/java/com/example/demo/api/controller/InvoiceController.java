@@ -3,6 +3,7 @@ package com.example.demo.api.controller;
 import com.example.demo.application.mapper.InvoiceMapper;
 import com.example.demo.application.service.InvoiceService;
 import com.example.demo.api.dto.CreditCardInvoiceDto;
+import com.example.demo.domain.model.CreditCardInvoice;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,8 @@ public class InvoiceController {
                                                                                       @RequestParam int month,
                                                                                       @RequestParam int year) {
 
-        return ResponseEntity.ok(invoiceMapper.toDto(invoiceService.createInvoice(creditCardId, month, year)));
+        CreditCardInvoice invoice = invoiceService.createInvoice(creditCardId, month, year);
+        CreditCardInvoiceDto dto = invoiceMapper.toDto(invoice);
+        return ResponseEntity.ok(dto);
     }
 }

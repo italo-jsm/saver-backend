@@ -24,6 +24,11 @@ public class ExpenseJpaRepository implements ExpenseRepository {
     }
 
     @Override
+    public void delete(Expense expense) {
+        expenseDao.delete(expenseEntityMapper.toEntity(expense));
+    }
+
+    @Override
     public Optional<Expense> findById(String id) {
         return expenseDao.findById(id).map(expenseEntityMapper::toDomain);
     }

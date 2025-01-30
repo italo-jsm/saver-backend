@@ -22,6 +22,7 @@ import java.util.Optional;
 @Slf4j
 public class ExpenseService {
 
+    public enum UPDATE_EVENT{CREATE, DELETE}
     private final ExpenseRepository expenseRepository;
     private final PaymentMethodRepository paymentMethodRepository;
     private final PaymentMethodService paymentMethodService;
@@ -40,17 +41,26 @@ public class ExpenseService {
                     expense.setFirstPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()));
                     expense.setLastPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()).plusMonths(expense.getInstallments() - 1));
                 });
-        updateBills(expense);
+        updateBills(expense, UPDATE_EVENT.CREATE);
         return expenseRepository.insert(expense);
     }
 
-    private void updateBills(Expense expense){
+    public void  deleteExpense(Expense expense){
+        updateBills(expense, UPDATE_EVENT.DELETE);
+        expenseRepository.delete(expense);
+    }
+
+    private void updateBills(Expense expense, UPDATE_EVENT event){
         PaymentMethod creditCard = paymentMethodService.getById(expense.getPaymentMethod().getId());
         if(creditCard.isCreditCard()){
             LocalDate firstPayment = expense.getFirstPayment();
             while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
                 Bill billToUpdate = billToUpdate(creditCard, firstPayment);
-                billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                if(event == UPDATE_EVENT.CREATE){
+                    billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                }else if(event == UPDATE_EVENT.DELETE){
+                    billToUpdate.setAmount(billToUpdate.getAmount().subtract(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                }
                 log.info("Updating bill {}", billToUpdate);
                 billService.saveBill(billToUpdate);
                 firstPayment = firstPayment.plusMonths(1);
