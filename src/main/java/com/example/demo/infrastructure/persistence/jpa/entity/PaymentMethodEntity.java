@@ -9,7 +9,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@Table(name = "payment-method")
+@Table(name = "paymentmethod")
 public class PaymentMethodEntity extends AbstractEntity{
     private String name;
     private Integer invoiceClosingDay;

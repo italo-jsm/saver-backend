@@ -1,10 +1,5 @@
 package com.example.demo.application.service;
 
-import com.example.demo.api.dto.BillDto;
-import com.example.demo.api.dto.ExpenseDto;
-import com.example.demo.api.dto.PaymentMethodDto;
-import com.example.demo.application.mapper.BillMapper;
-import com.example.demo.application.mapper.ExpenseMapper;
 import com.example.demo.domain.model.Bill;
 import com.example.demo.domain.model.Expense;
 import com.example.demo.domain.model.PaymentMethod;
@@ -12,6 +7,7 @@ import com.example.demo.domain.repository.ExpenseRepository;
 import com.example.demo.domain.repository.PaymentMethodRepository;
 import com.example.demo.enums.BillState;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,47 +19,58 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ExpenseService {
 
-    private final ExpenseMapper expenseMapper;
-    private final BillMapper billMapper;
+    public enum UPDATE_EVENT{CREATE, DELETE}
     private final ExpenseRepository expenseRepository;
     private final PaymentMethodRepository paymentMethodRepository;
     private final PaymentMethodService paymentMethodService;
     private final BillService billService;
 
-    public List<ExpenseDto> getAll(){
-        return expenseRepository.findAll().stream().map(expenseMapper::toDto).toList();
+    public List<Expense> getAll(){
+        return expenseRepository.findAll();
     }
 
-    public String createExpense(ExpenseDto expenseDto) {
-        Expense expense = expenseMapper.toDomain(expenseDto);
-        expense.setLastPayment(expenseDto.expenseDate());
-        expense.setFirstPayment(expenseDto.expenseDate());
-        paymentMethodRepository.findById(expenseDto.paymentMethod().getId())
+    public String createExpense(Expense expense) {
+        log.info("Creating expense {}", expense);
+        expense.setLastPayment(expense.getExpenseDate());
+        expense.setFirstPayment(expense.getExpenseDate());
+        paymentMethodRepository.findById(expense.getPaymentMethod().getId())
                 .ifPresent(paymentMethod -> {
-                    expense.setFirstPayment(paymentMethod.firstPaymentDate(expenseDto.expenseDate()));
-                    expense.setLastPayment(paymentMethod.firstPaymentDate(expenseDto.expenseDate()).plusMonths(expenseDto.installments() - 1));
+                    expense.setFirstPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()));
+                    expense.setLastPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()).plusMonths(expense.getInstallments() - 1));
                 });
-        updateBills(expense);
+        updateBills(expense, UPDATE_EVENT.CREATE);
         return expenseRepository.insert(expense);
     }
 
-    private void updateBills(Expense expense){
-        PaymentMethodDto creditCard = paymentMethodService.getById(expense.getPaymentMethod().getId());
+    public void  deleteExpense(Expense expense){
+        updateBills(expense, UPDATE_EVENT.DELETE);
+        expenseRepository.delete(expense);
+    }
+
+    private void updateBills(Expense expense, UPDATE_EVENT event){
+        PaymentMethod creditCard = paymentMethodService.getById(expense.getPaymentMethod().getId());
         if(creditCard.isCreditCard()){
             LocalDate firstPayment = expense.getFirstPayment();
             while(firstPayment.isBefore(expense.getLastPayment()) || firstPayment.isEqual(expense.getLastPayment())){
-                BillDto billToUpdate = billToUpdate(creditCard, firstPayment);
-                billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                Bill billToUpdate = billToUpdate(creditCard, firstPayment);
+                if(event == UPDATE_EVENT.CREATE){
+                    billToUpdate.setAmount(billToUpdate.getAmount().add(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                }else if(event == UPDATE_EVENT.DELETE){
+                    billToUpdate.setAmount(billToUpdate.getAmount().subtract(expense.getAmount().divide(BigDecimal.valueOf(expense.getInstallments()), RoundingMode.CEILING)));
+                }
+                log.info("Updating bill {}", billToUpdate);
                 billService.saveBill(billToUpdate);
                 firstPayment = firstPayment.plusMonths(1);
             }
         }
     }
 
-    private BillDto billToUpdate(PaymentMethodDto creditCard, LocalDate dueDate){
-        return billService.findBillByCreditCardIdAndDueDate(creditCard.getId(), dueDate).orElseGet(() -> {
+    private Bill billToUpdate(PaymentMethod creditCard, LocalDate dueDate){
+        Optional<Bill> billByCreditCardIdAndDueDate = billService.findBillByCreditCardIdAndDueDate(creditCard.getId(), dueDate);
+        return billByCreditCardIdAndDueDate.orElseGet(() -> {
             Bill bill = Bill.builder()
                     .state(BillState.TO_EXPIRE)
                     .amount(BigDecimal.ZERO)
@@ -72,26 +79,24 @@ public class ExpenseService {
                     .dueDate(dueDate)
                     .creditCardId(creditCard.getId())
                     .build();
-            String id = billService.saveBill(billMapper.toDto(bill));
-            bill.setId(id);
-            return billMapper.toDto(bill);
+            return billService.saveBill(bill);
         });
     }
 
-    public Optional<ExpenseDto> getExpenseById(String id) {
-        return expenseRepository.findById(id).map(expenseMapper::toDto);
+    public Optional<Expense> getExpenseById(String id) {
+        return expenseRepository.findById(id);
     }
 
-    public List<ExpenseDto> getExpensesByPaymentMethod(PaymentMethod paymentMethod){
-        return expenseRepository.findByPaymentMethodId(paymentMethod.getId()).stream().map(expenseMapper::toDto).toList();
+    public List<Expense> getExpensesByPaymentMethod(PaymentMethod paymentMethod){
+        return expenseRepository.findByPaymentMethodId(paymentMethod.getId());
     }
 
-    public List<ExpenseDto> getExpensesByMonthAndYear(int month, int year){
-        return expenseRepository.findByPaymentMonthAndYear(month, year).stream().map(expenseMapper::toDto).toList();
+    public List<Expense> getExpensesByMonthAndYear(int month, int year){
+        return expenseRepository.findByPaymentMonthAndYear(month, year);
     }
 
 
-    public List<ExpenseDto> getInvoiceSummary(String creditCardId, YearMonth dueMonth){
-        return expenseRepository.findInvoiceExpenses(creditCardId, dueMonth).stream().map(expenseMapper::toDto).toList();
+    public List<Expense> getInvoiceSummary(String creditCardId, YearMonth dueMonth){
+        return expenseRepository.findInvoiceExpenses(creditCardId, dueMonth);
     }
 }

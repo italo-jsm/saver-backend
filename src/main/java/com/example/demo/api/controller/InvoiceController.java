@@ -1,7 +1,9 @@
 package com.example.demo.api.controller;
 
+import com.example.demo.application.mapper.InvoiceMapper;
 import com.example.demo.application.service.InvoiceService;
 import com.example.demo.api.dto.CreditCardInvoiceDto;
+import com.example.demo.domain.model.CreditCardInvoice;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
+    private final InvoiceMapper invoiceMapper;
 
     @GetMapping()
     public ResponseEntity<CreditCardInvoiceDto> getInvoiceByMonthAndYearAndCreditCard(@AuthenticationPrincipal UserDetails userDetails,
@@ -22,6 +25,8 @@ public class InvoiceController {
                                                                                       @RequestParam int month,
                                                                                       @RequestParam int year) {
 
-        return ResponseEntity.ok(invoiceService.createInvoice(creditCardId, month, year));
+        CreditCardInvoice invoice = invoiceService.createInvoice(creditCardId, month, year);
+        CreditCardInvoiceDto dto = invoiceMapper.toDto(invoice);
+        return ResponseEntity.ok(dto);
     }
 }

@@ -1,8 +1,5 @@
 package com.example.demo.application.service;
 
-import com.example.demo.api.dto.BillDto;
-import com.example.demo.api.dto.ExpenseDto;
-import com.example.demo.application.mapper.BillMapper;
 import com.example.demo.domain.model.Bill;
 import com.example.demo.domain.repository.BillRepository;
 import com.example.demo.enums.BillState;
@@ -10,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,40 +15,38 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BillService {
     private final BillRepository billRepository;
-    private final BillMapper billMapper;
 
-    public String saveBill(BillDto bill){
-        BillState billState = bill.getState();
+    public Bill saveBill(Bill bill){
         if(bill.getState() != BillState.PAYED){
             if(bill.getDueDate().isEqual(LocalDate.now())){
-                billState = BillState.DUE_TODAY;
+                bill.setState(BillState.DUE_TODAY);
             }
             if(bill.getDueDate().isBefore(LocalDate.now())){
-                billState = BillState.LATE;
+                bill.setState(BillState.LATE);
             }
         }
-        return billRepository.createBill(billMapper.toDomain(new BillDto(bill.getId(), bill.getAmount(), bill.getDueDate(), bill.getDescription(), bill.getFilePath(), billState, bill.getCreditCardId())));
+        return billRepository.createBill(bill);
     }
 
-    public String updateBill(BillDto billDto){
-        return "";
+
+    public List<Bill> getAll(){
+        return billRepository.getAll();
     }
 
-    public List<BillDto> getAll(){
-        return billRepository.getAll().stream().map(billMapper::toDto).toList();
+    public List<Bill> getBillsByMonthAndYear(int month, int year){
+        return billRepository.findByPaymentMonthAndYear(month, year);
     }
 
-    public List<BillDto> getBillsByMonthAndYear(int month, int year){
-        List<Bill> byPaymentMonthAndYear = billRepository.findByPaymentMonthAndYear(month, year);
-        return byPaymentMonthAndYear.stream().map(billMapper::toDto).toList();
+    public List<Bill> getBillsByCreditCardId(String creditCardId){
+        return billRepository.findBillsByCreditCardId(creditCardId);
     }
 
-    public List<BillDto> getBillsByCreditCardId(String creditCardId){
-        return billRepository.findBillsByCreditCardId(creditCardId).stream().map(billMapper::toDto).toList();
+    public Optional<Bill> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate){
+        return  billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate);
     }
 
-    public Optional<BillDto> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate){
-        Optional<BillDto> billDto = billRepository.findBillByCreditCardIdAndDueDate(creditCardId, dueDate).map(billMapper::toDto);
-        return billDto;
+    public List<Bill> findByDueDateBetween(LocalDate begin, LocalDate end) {
+        //TODO
+        return new ArrayList<>();
     }
 }

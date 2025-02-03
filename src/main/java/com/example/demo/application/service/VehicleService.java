@@ -1,7 +1,6 @@
 package com.example.demo.application.service;
 
-import com.example.demo.api.dto.VehicleDto;
-import com.example.demo.application.mapper.VehicleMapper;
+import com.example.demo.domain.model.Vehicle;
 import com.example.demo.domain.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,13 +12,12 @@ import java.util.List;
 public class VehicleService{
 
     private final VehicleRepository vehicleRepository;
-    private final VehicleMapper vehicleMapper;
 
-    public String createVehicle(VehicleDto vehicleDto){
-        return vehicleRepository.insert(vehicleMapper.toDomain(vehicleDto));
+    public String createVehicle(Vehicle vehicle){
+        return vehicleRepository.insert(vehicle);
     }
 
-    public List<VehicleDto> getAll(){
-        return vehicleRepository.findAll().stream().map(vehicleMapper::toDto).toList();
+    public List<Vehicle> getAll(){
+        return vehicleRepository.findAll();
     }
 }

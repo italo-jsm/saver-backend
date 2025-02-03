@@ -25,12 +25,13 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) throws InterruptedException {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authRequest.username(), authRequest.password()));
             return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(authentication.getName())));
         } catch (AuthenticationException e) {
+            Thread.sleep(3000L);
             throw new RuntimeException("Credenciais inválidas");
         }
     }

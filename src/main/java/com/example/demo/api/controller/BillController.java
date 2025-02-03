@@ -3,6 +3,7 @@ package com.example.demo.api.controller;
 import com.example.demo.api.dto.BillDto;
 import com.example.demo.api.dto.ExpenseDto;
 import com.example.demo.api.dto.response.CreatedResponse;
+import com.example.demo.application.mapper.BillMapper;
 import com.example.demo.application.service.BillService;
 import com.example.demo.domain.model.Bill;
 import lombok.AllArgsConstructor;
@@ -25,17 +26,18 @@ import java.util.UUID;
 public class BillController {
 
     private final BillService billService;
+    private final BillMapper billMapper;
 
     @PostMapping
     public ResponseEntity<CreatedResponse> saveBill(@RequestBody BillDto billDto){
-        String resourceId = billService.saveBill(billDto);
+        String resourceId = billService.saveBill(billMapper.toDomain(billDto)).getId();
         return ResponseEntity.created(URI.create(resourceId)).body(CreatedResponse.withResourceId(resourceId));
     }
 
 
     @GetMapping
     public ResponseEntity<List<BillDto>> getAll(){
-        return ResponseEntity.ok(billService.getAll());
+        return ResponseEntity.ok(billService.getAll().stream().map(billMapper::toDto).toList());
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -57,7 +59,7 @@ public class BillController {
     @GetMapping("/by-month")
     public ResponseEntity<List<BillDto>> getBillsByMonthAndYear(@RequestParam int month, @RequestParam int year) {
         return ResponseEntity
-                .ok(billService.getBillsByMonthAndYear(month, year));
+                .ok(billService.getBillsByMonthAndYear(month, year).stream().map(billMapper::toDto).toList());
     }
 
 }

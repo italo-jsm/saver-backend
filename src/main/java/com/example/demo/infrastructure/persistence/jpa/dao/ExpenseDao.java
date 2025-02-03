@@ -20,7 +20,7 @@ public interface ExpenseDao extends JpaRepository<ExpenseEntity, String> {
     @Query(value = """
                 SELECT *
                 FROM expense
-                WHERE "payment-method_id" = :paymentMethodId
+                WHERE "paymentmethod_id" = :paymentMethodId
                   AND :reference BETWEEN DATE_TRUNC('month', first_payment)
                                      AND DATE_TRUNC('month', last_payment)
             """, nativeQuery = true)

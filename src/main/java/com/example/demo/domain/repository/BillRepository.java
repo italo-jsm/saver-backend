@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BillRepository {
-    String createBill(Bill bill);
+    Bill createBill(Bill bill);
     List<Bill> getAll();
     List<Bill> findByPaymentMonthAndYear(int month, int year);
     List<Bill> findBillsByCreditCardId(String creditCardId);
