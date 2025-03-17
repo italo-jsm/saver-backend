@@ -62,4 +62,10 @@ public class BillController {
                 .ok(billService.getBillsByMonthAndYear(month, year).stream().map(billMapper::toDto).toList());
     }
 
+    @PatchMapping
+    public ResponseEntity<CreatedResponse> setBillState(@RequestBody BillDto billDto){
+        String resourceId = billService.setBillState(billMapper.toDomain(billDto)).getId();
+        return ResponseEntity.created(URI.create(resourceId)).body(CreatedResponse.withResourceId(resourceId));
+    }
+
 }

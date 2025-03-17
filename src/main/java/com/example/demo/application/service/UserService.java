@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String createSystemUser(String username, String password){
-        systemUserRepository.findByUsername(username).ifPresent(e -> {
+        systemUserRepository.findByUsername(username).ifPresent(_ -> {
             throw new RuntimeException("Nome de usuario ja existe");
         });
         return systemUserRepository.saveSystemUser(new SystemUser("", username, password));

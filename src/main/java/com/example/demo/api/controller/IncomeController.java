@@ -22,7 +22,7 @@ public class IncomeController {
     private final IncomeMapper incomeMapper;
 
     @PostMapping
-    public ResponseEntity<CreatedResponse> saveCategory(@RequestBody IncomeDto incomeDto){
+    public ResponseEntity<CreatedResponse> saveIncome(@RequestBody IncomeDto incomeDto){
         String incomeId = incomeService.saveIncome(incomeMapper.toDomain(incomeDto));
         return ResponseEntity.created(URI.create(incomeId)).body(new CreatedResponse(RESOURCE_ID, incomeId));
     }

@@ -9,9 +9,10 @@ import java.util.List;
 
 public interface IncomeDao extends JpaRepository<IncomeEntity, String> {
 
-    @Query(value = "SELECT * FROM income " +
-            "WHERE EXTRACT(MONTH FROM due_date) = :month " +
-            "AND EXTRACT(YEAR FROM due_date) = :year",
+    @Query(value = "SELECT * FROM income WHERE (EXTRACT(MONTH FROM due_date) = :month AND EXTRACT(YEAR FROM due_date) = :year) OR " +
+            "(EXTRACT(MONTH FROM due_date) <= :month AND EXTRACT(YEAR FROM due_date) <= :year and end_date is NULL)",
             nativeQuery = true)
-    List<IncomeEntity> findByBillMonthAndYear(@Param("month") int month, @Param("year") int year);
+    List<IncomeEntity> findIncomeByMonthAndYear(@Param("month") int month, @Param("year") int year);
+
+
 }

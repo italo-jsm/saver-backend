@@ -28,6 +28,12 @@ public class BillService {
         return billRepository.createBill(bill);
     }
 
+    public Bill setBillState(Bill bill){
+        Bill toUpdate = billRepository.findById(bill.getId()).orElseThrow();
+        toUpdate.setState(bill.getState());
+        return billRepository.createBill(toUpdate);
+    }
+
 
     public List<Bill> getAll(){
         return billRepository.getAll();

@@ -38,6 +38,9 @@ public class ExpenseService {
         expense.setFirstPayment(expense.getExpenseDate());
         paymentMethodRepository.findById(expense.getPaymentMethod().getId())
                 .ifPresent(paymentMethod -> {
+                    if(!paymentMethod.isCreditCard()){
+                        billService.saveBill(Bill.builder().state(BillState.PAYED).dueDate(LocalDate.now()).description(expense.getDescription()).amount(expense.getAmount()).build());
+                    }
                     expense.setFirstPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()));
                     expense.setLastPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()).plusMonths(expense.getInstallments() - 1));
                 });

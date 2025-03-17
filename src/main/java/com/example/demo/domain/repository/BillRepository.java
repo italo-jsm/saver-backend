@@ -12,4 +12,5 @@ public interface BillRepository {
     List<Bill> findByPaymentMonthAndYear(int month, int year);
     List<Bill> findBillsByCreditCardId(String creditCardId);
     Optional<Bill> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate);
+    Optional<Bill> findById(String id);
 }

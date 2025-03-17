@@ -45,4 +45,9 @@ public class BillJpaRepository implements BillRepository {
     public Optional<Bill> findBillByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate) {
         return billDao.findByCreditCardIdAndDueDate(creditCardId, dueDate).map(billEntityMapper::toDomain);
     }
+
+    @Override
+    public Optional<Bill> findById(String id) {
+        return billDao.findById(id).map(billEntityMapper::toDomain);
+    }
 }
