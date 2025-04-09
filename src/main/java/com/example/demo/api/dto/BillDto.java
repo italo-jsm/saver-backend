@@ -20,6 +20,7 @@ public class BillDto {
     private String filePath;
     private BillState state;
     private String creditCardId;
+    private Integer recurrence;
     private String createdByUsername;
     private String updatedByUsername;
     private LocalDateTime createdAt;

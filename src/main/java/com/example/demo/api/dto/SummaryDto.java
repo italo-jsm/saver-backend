@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IncomeDto {
-    private String description;
-    private LocalDate dueDate;
-    private Integer recurrence;
-    private BigDecimal amount;
+public class SummaryDto {
+    BigDecimal totalIncomes;
+    BigDecimal totalOutcomes;
+    int month;
+    int year;
 }

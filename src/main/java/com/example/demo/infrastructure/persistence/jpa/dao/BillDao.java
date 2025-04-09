@@ -1,6 +1,7 @@
 package com.example.demo.infrastructure.persistence.jpa.dao;
 
 import com.example.demo.infrastructure.persistence.jpa.entity.BillEntity;
+import com.example.demo.infrastructure.persistence.jpa.entity.IncomeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,7 @@ public interface BillDao extends JpaRepository<BillEntity, String> {
 
     List<BillEntity> findByCreditCardId(String creditCardId);
     Optional<BillEntity> findByCreditCardIdAndDueDate(String creditCardId, LocalDate dueDate);
+
+    @Query("SELECT b FROM BillEntity b WHERE DATE(b.dueDate) = :date")
+    List<BillEntity> findBillByDate(@Param("date") LocalDate date);
 }

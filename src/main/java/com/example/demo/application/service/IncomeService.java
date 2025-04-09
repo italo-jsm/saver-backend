@@ -1,10 +1,13 @@
 package com.example.demo.application.service;
 
+import com.example.demo.domain.model.Bill;
 import com.example.demo.domain.model.Income;
 import com.example.demo.domain.repository.IncomeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 @Service
@@ -17,8 +20,13 @@ public class IncomeService {
         return incomeRepository.insert(income);
     }
 
-
     public List<Income> getIncomesByMonthAndYear(int month, int year){
-        return incomeRepository.findByPaymentMonthAndYear(month, year);
+        return incomeRepository.findAllIncomes(month, year).stream().peek(it -> it.setDueDate(
+                LocalDate.of(year, Month.of(month), it.getDueDate().getDayOfMonth())
+                )).toList();
+    }
+
+    public List<Income> findIncomesByDate(LocalDate date){
+        return incomeRepository.findIncomesByDate(date);
     }
 }

@@ -30,7 +30,11 @@ public class BillController {
 
     @PostMapping
     public ResponseEntity<CreatedResponse> saveBill(@RequestBody BillDto billDto){
-        String resourceId = billService.saveBill(billMapper.toDomain(billDto)).getId();
+        String resourceId = "";
+        for(int i = 0 ; i < billDto.getRecurrence() ; i++){
+            resourceId = billService.saveBill(billMapper.toDomain(billDto)).getId();
+            billDto.setDueDate(billDto.getDueDate().plusMonths(1));
+        }
         return ResponseEntity.created(URI.create(resourceId)).body(CreatedResponse.withResourceId(resourceId));
     }
 
@@ -60,6 +64,12 @@ public class BillController {
     public ResponseEntity<List<BillDto>> getBillsByMonthAndYear(@RequestParam int month, @RequestParam int year) {
         return ResponseEntity
                 .ok(billService.getBillsByMonthAndYear(month, year).stream().map(billMapper::toDto).toList());
+    }
+
+    @PatchMapping
+    public ResponseEntity<CreatedResponse> setBillState(@RequestBody BillDto billDto){
+        String resourceId = billService.setBillState(billMapper.toDomain(billDto)).getId();
+        return ResponseEntity.created(URI.create(resourceId)).body(CreatedResponse.withResourceId(resourceId));
     }
 
 }

@@ -22,8 +22,12 @@ public class IncomeController {
     private final IncomeMapper incomeMapper;
 
     @PostMapping
-    public ResponseEntity<CreatedResponse> saveCategory(@RequestBody IncomeDto incomeDto){
-        String incomeId = incomeService.saveIncome(incomeMapper.toDomain(incomeDto));
+    public ResponseEntity<CreatedResponse> saveIncome(@RequestBody IncomeDto incomeDto){
+        String incomeId = "";
+        for(int i = 0 ; i < incomeDto.getRecurrence() ; i++){
+            incomeId = incomeService.saveIncome(incomeMapper.toDomain(incomeDto));
+            incomeDto.setDueDate(incomeDto.getDueDate().plusMonths(1));
+        }
         return ResponseEntity.created(URI.create(incomeId)).body(new CreatedResponse(RESOURCE_ID, incomeId));
     }
 
