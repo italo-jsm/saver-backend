@@ -6,6 +6,8 @@ import com.example.demo.infrastructure.persistence.jpa.dao.IncomeDao;
 import com.example.demo.infrastructure.persistence.jpa.mapper.IncomeEntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,5 +24,10 @@ public class IncomeJpaRepository implements IncomeRepository {
 
     public List<Income> findAllIncomes(int month, int year){
         return incomeDao.findIncomeByMonthAndYear(month, year).stream().map(incomeEntityMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Income> findIncomesByDate(LocalDate date) {
+        return incomeDao.findIncomeByDate(date).stream().map(incomeEntityMapper::toDomain).toList();
     }
 }

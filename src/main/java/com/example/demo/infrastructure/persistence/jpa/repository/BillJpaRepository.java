@@ -50,4 +50,9 @@ public class BillJpaRepository implements BillRepository {
     public Optional<Bill> findById(String id) {
         return billDao.findById(id).map(billEntityMapper::toDomain);
     }
+
+    @Override
+    public List<Bill> findBillsByDate(LocalDate date) {
+        return billDao.findBillByDate(date).stream().map(billEntityMapper::toDomain).toList();
+    }
 }

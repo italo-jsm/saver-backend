@@ -55,4 +55,8 @@ public class BillService {
         //TODO
         return new ArrayList<>();
     }
+
+    public List<Bill> findBillsByDate(LocalDate date){
+        return billRepository.findBillsByDate(date);
+    }
 }

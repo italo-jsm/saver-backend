@@ -2,7 +2,7 @@ package com.example.demo.api.controller;
 
 import com.example.demo.api.dto.SummaryDto;
 import com.example.demo.application.mapper.SummaryMapper;
-import com.example.demo.application.service.SummaryService;
+import com.example.demo.application.service.BalanceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SummaryController {
 
-    private final SummaryService summaryService;
+    private final BalanceService summaryService;
     private final SummaryMapper summaryMapper;
 
     @GetMapping

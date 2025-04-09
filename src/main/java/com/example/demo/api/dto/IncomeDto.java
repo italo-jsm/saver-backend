@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class IncomeDto {
     private String description;
-    private LocalDate endDate;
     private LocalDate dueDate;
+    private Integer recurrence;
     private BigDecimal amount;
 }
