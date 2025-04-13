@@ -28,3 +28,7 @@ jobs:
 
       - name: Docker Push
         run: docker push $IMAGE_NAME:latest
+
+      - name: Deploy
+        run: |
+            curl -X POST https://italomariano.dev.br/deploy      -H "Content-Type: application/json"      -d '{"app": "backend"}'
