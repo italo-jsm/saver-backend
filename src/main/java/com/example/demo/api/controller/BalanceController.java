@@ -20,6 +20,7 @@ public class BalanceController {
 
     @GetMapping
     public ResponseEntity<List<BalanceDto>> getProjection(@RequestParam int days){
+        //
         return ResponseEntity.ok(balanceService.createProjection(days).stream().map(balanceMapper::toDto).toList());
     }
 
