@@ -31,4 +31,4 @@ jobs:
 
       - name: Deploy
         run: |
-            curl -X POST https://italomariano.dev.br/deploy      -H "Content-Type: application/json"      -d '{"app": "backend"}'
+            curl -X POST https://deploy.italomariano.dev.br      -H "Content-Type: application/json"      -d '{"app": "backend"}'
