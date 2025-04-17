@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,6 +26,13 @@ public class ExpenseController {
     public ResponseEntity<CreatedResponse> createExpense(@RequestBody ExpenseDto expenseDto){
         String expenseId = expenseService.createExpense(expenseMapper.toDomain(expenseDto));
         return ResponseEntity.created(URI.create(expenseId)).body(new CreatedResponse(CreatedResponse.RESOURCE_ID, expenseId));
+    }
+
+    @PostMapping("/many")
+    public ResponseEntity<Void> createExpenses(@RequestBody List<ExpenseDto> expenseDtos){
+        List<CreatedResponse> responses = new ArrayList<>();
+        expenseDtos.forEach(it -> expenseService.createExpense(expenseMapper.toDomain(it)));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
