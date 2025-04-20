@@ -1,10 +1,12 @@
 package com.example.demo.api.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 public class PaymentMethodDto{
     private String id;
     private String name;
