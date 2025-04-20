@@ -60,4 +60,9 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseService.getInvoiceSummary(creditCardId, reference).stream().map(expenseMapper::toDto).toList());
     }
 
+    @GetMapping("/installments")
+    public ResponseEntity<List<ExpenseDto>> getInstallments(@RequestParam YearMonth reference){
+        return ResponseEntity.ok(expenseService.installmentsByMonthAndYear(reference.getMonth().getValue(), reference.getYear()).stream().map(expenseMapper::toDto).toList());
+    }
+
 }

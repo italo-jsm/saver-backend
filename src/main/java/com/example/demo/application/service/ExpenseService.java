@@ -102,4 +102,11 @@ public class ExpenseService {
     public List<Expense> getInvoiceSummary(String creditCardId, YearMonth dueMonth){
         return expenseRepository.findInvoiceExpenses(creditCardId, dueMonth);
     }
+
+    public List<Expense> installmentsByMonthAndYear(Integer month, Integer year){
+        return paymentMethodService.getAll().stream()
+                .flatMap(it -> this.getInvoiceSummary(it.getId(), YearMonth.of(year, month)).stream())
+                .filter(ex -> ex.getInstallments() > 1)
+                .toList();
+    }
 }
