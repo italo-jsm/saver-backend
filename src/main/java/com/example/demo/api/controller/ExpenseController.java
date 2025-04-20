@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -61,8 +62,13 @@ public class ExpenseController {
     }
 
     @GetMapping("/installments")
-    public ResponseEntity<List<ExpenseDto>> getInstallments(@RequestParam YearMonth reference){
-        return ResponseEntity.ok(expenseService.installmentsByMonthAndYear(reference.getMonth().getValue(), reference.getYear()).stream().map(expenseMapper::toDto).toList());
+    public ResponseEntity<String> getInstallments(@RequestParam YearMonth reference){
+        List<ExpenseDto> list = expenseService.installmentsByMonthAndYear(reference.getMonth().getValue(), reference.getYear()).stream().map(expenseMapper::toDto).toList();
+        BigDecimal amount = BigDecimal.ZERO;
+        for(ExpenseDto  e : list){
+            amount = amount.add(e.amount().divide(BigDecimal.valueOf(e.installments())));
+        }
+        return ResponseEntity.ok(String.valueOf(amount));
     }
 
 }
