@@ -24,7 +24,7 @@ public class InvoiceService {
         if(paymentMethod.getInvoiceClosingDay() == null){
             throw new RuntimeException("Payment Method Must Be a Credit Card!");
         }else{
-            List<Expense> invoiceSummary = expenseService.getInvoiceSummary(creditCardId, YearMonth.of(year, month));
+            List<Expense> invoiceSummary = expenseService.getExpensesByPaymentMethodAndDueDate(creditCardId, YearMonth.of(year, month));
 
             return CreditCardInvoice
                     .builder()

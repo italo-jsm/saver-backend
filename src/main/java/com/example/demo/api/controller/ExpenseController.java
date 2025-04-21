@@ -58,7 +58,7 @@ public class ExpenseController {
 
     @GetMapping("/by-credit-card")
     public ResponseEntity<List<ExpenseDto>> getByCreditCardAndMonth(@RequestParam String creditCardId, @RequestParam YearMonth reference){
-        return ResponseEntity.ok(expenseService.getInvoiceSummary(creditCardId, reference).stream().map(expenseMapper::toDto).toList());
+        return ResponseEntity.ok(expenseService.getExpensesByPaymentMethodAndDueDate(creditCardId, reference).stream().map(expenseMapper::toDto).toList());
     }
 
     @GetMapping("/installments")
