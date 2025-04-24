@@ -34,13 +34,14 @@ public class ExpenseService {
         expense.setFirstPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()));
         expense.setLastPayment(paymentMethod.firstPaymentDate(expense.getExpenseDate()).plusMonths(expense.getInstallments() - 1));
         String createdExpense = expenseRepository.insert(expense);
-        publisher.publishEvent(new ExpenseCreatedEvent(expense, ExpenseCreatedEvent.UPDATE_EVENT.CREATE));
+        publisher.publishEvent(new ExpenseCreatedEvent(expense));
         return createdExpense;
     }
 
-    public void  deleteExpense(Expense expense){
+    public void  deleteExpense(String expenseId){
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow();
         expenseRepository.delete(expense);
-        publisher.publishEvent(new ExpenseCreatedEvent(expense, ExpenseCreatedEvent.UPDATE_EVENT.DELETE));
+        publisher.publishEvent(new ExpenseCreatedEvent(expense));
     }
 
     public Optional<Expense> getExpenseById(String id) {

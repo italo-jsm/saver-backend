@@ -7,7 +7,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ExpenseCreatedEvent {
-    public enum UPDATE_EVENT{CREATE, DELETE}
     private Expense expense;
-    private UPDATE_EVENT updateEvent;
 }

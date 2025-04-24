@@ -49,10 +49,10 @@ public class BillService {
         if (!paymentMethod.isCreditCard()) {
             saveBill(Bill.builder().state(BillState.PAYED).dueDate(LocalDate.now()).description(event.getExpense().getDescription()).amount(event.getExpense().getAmount()).build());
         }
-        updateBills(event.getExpense(), event.getUpdateEvent());
+        updateBills(event.getExpense());
     }
 
-    public void updateBills(Expense expense, ExpenseCreatedEvent.UPDATE_EVENT event){
+    public void updateBills(Expense expense){
         PaymentMethod creditCard = paymentMethodService.getById(expense.getPaymentMethod().getId());
         if(creditCard.isCreditCard()){
             LocalDate firstPayment = expense.getFirstPayment();

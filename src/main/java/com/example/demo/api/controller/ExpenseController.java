@@ -71,4 +71,10 @@ public class ExpenseController {
         return ResponseEntity.ok(String.valueOf(amount));
     }
 
+    @DeleteMapping("/{expenseId}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable String expenseId){
+        expenseService.deleteExpense(expenseId);
+        return ResponseEntity.ok().build();
+    }
+
 }
