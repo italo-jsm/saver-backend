@@ -582,3 +582,27 @@ databaseChangeLog:
                   type: "TIMESTAMP"
                   constraints:
                     nullable: false
+
+
+  - changeSet:
+      id: 25
+      author: "italo"
+      changes:
+        - renameColumn:
+            tableName: "bill"
+            oldColumnName: "file_path"
+            newColumnName: "bank_slip_file_path"
+            columnDataType: "varchar(255)"
+
+  - changeSet:
+      id: 26
+      author: "bill"
+      changes:
+        - addColumn:
+            tableName: "bill"
+            columns:
+              - column:
+                  name: "payment_receipt_file_path"
+                  type: "varchar(255)"
+                  constraints:
+                    nullable: true

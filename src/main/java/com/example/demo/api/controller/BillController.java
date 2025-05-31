@@ -5,8 +5,12 @@ import com.example.demo.api.dto.ExpenseDto;
 import com.example.demo.api.dto.response.CreatedResponse;
 import com.example.demo.application.mapper.BillMapper;
 import com.example.demo.application.service.BillService;
+import com.example.demo.application.service.FileStorageService;
 import com.example.demo.domain.model.Bill;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,9 @@ import javax.print.attribute.standard.Media;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,15 +33,20 @@ import java.util.UUID;
 public class BillController {
 
     private final BillService billService;
+    private final FileStorageService fileStorageService;
     private final BillMapper billMapper;
 
-    @PostMapping
-    public ResponseEntity<CreatedResponse> saveBill(@RequestBody BillDto billDto){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CreatedResponse> saveBill(@RequestPart(value = "file", required = false) MultipartFile file, @RequestPart("billDto") BillDto billDto) throws IOException {
         String resourceId = "";
-        for(int i = 0 ; i < billDto.getRecurrence() ; i++){
-            resourceId = billService.saveBill(billMapper.toDomain(billDto)).getId();
-            billDto.setDueDate(billDto.getDueDate().plusMonths(1));
+
+        if (file != null && !file.isEmpty()) {
+            String filePath = fileStorageService.saveFile(file);
+            billDto.setBankSlipFilePath(filePath);
         }
+
+        resourceId = billService.saveBill(billMapper.toDomain(billDto)).getId();
+
         return ResponseEntity.created(URI.create(resourceId)).body(CreatedResponse.withResourceId(resourceId));
     }
 
@@ -42,22 +54,6 @@ public class BillController {
     @GetMapping
     public ResponseEntity<List<BillDto>> getAll(){
         return ResponseEntity.ok(billService.getAll().stream().map(billMapper::toDto).toList());
-    }
-
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CreatedResponse> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(CreatedResponse.withError("File is empty"));
-        }
-
-        try {
-            String filename = "bills-" + UUID.randomUUID().toString();
-            File uploadedFile = new File(System.getProperty("user.dir") + "/saver-docs/bills/"  + filename);
-            file.transferTo(uploadedFile);
-            return ResponseEntity.created(URI.create(filename)).body(CreatedResponse.withFileName(filename));
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(CreatedResponse.withError("Failed to upload file"));
-        }
     }
 
     @GetMapping("/by-month")
@@ -72,4 +68,18 @@ public class BillController {
         return ResponseEntity.created(URI.create(resourceId)).body(CreatedResponse.withResourceId(resourceId));
     }
 
+    @GetMapping("/files/{filename}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String filename) throws IOException {
+        Path path = Paths.get(System.getProperty("user.dir") + "/saver-docs/bills/" + filename);
+        if (!Files.exists(path)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = new UrlResource(path.toUri());
+        String contentType = Files.probeContentType(path);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType != null ? contentType : "application/octet-stream"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + path.getFileName().toString() + "\"")
+                .body(resource);
+    }
 }

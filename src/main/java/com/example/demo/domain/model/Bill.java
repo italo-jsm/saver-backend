@@ -22,6 +22,8 @@ public class Bill {
     private String filePath;
     private BillState state;
     private String creditCardId;
+    private String bankSlipFilePath;
+    private String paymentReceiptFilePath;
     private String createdByUsername;
     private String updatedByUsername;
     private LocalDateTime createdAt;

@@ -17,12 +17,9 @@ public class BillDto {
     private BigDecimal amount;
     private LocalDate dueDate;
     private String description;
-    private String filePath;
     private BillState state;
     private String creditCardId;
-    private Integer recurrence;
-    private String createdByUsername;
-    private String updatedByUsername;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String bankSlipFilePath;
+    private String paymentReceiptFilePath;
+
 }

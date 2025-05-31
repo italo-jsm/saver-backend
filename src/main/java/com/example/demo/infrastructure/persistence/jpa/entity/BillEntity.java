@@ -13,10 +13,12 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "bill")
 public class BillEntity extends AbstractEntity{
-    private String filePath;
+    private String bankSlipFilePath;
+    private String paymentReceiptFilePath;
     private BigDecimal amount;
     private LocalDate dueDate;
     private String description;
     private BillState state;
     private String creditCardId;
+
 }

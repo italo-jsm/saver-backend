@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -28,6 +29,11 @@ public class BalanceService {
         List<Balance> projection = new ArrayList<>();
         LocalDate date = LocalDate.now();
         Balance lastBalance = balanceRepository.findLast();
+        if(lastBalance == null){
+            Balance balance = Balance.builder().balance(BigDecimal.ZERO).balanceDate(LocalDate.now()).bills(Collections.emptyList()).incomes(Collections.emptyList()).build();
+            balanceRepository.createBalance(balance);
+            lastBalance = balanceRepository.findLast();
+        }
 
         for(int i = 0 ; i < days ; i++){
             List<Income> incomesByDate = incomeService.findIncomesByDate(date);

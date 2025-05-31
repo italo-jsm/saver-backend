@@ -9,10 +9,13 @@ import com.example.demo.enums.BillState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +37,18 @@ public class BillService {
                 bill.setState(BillState.LATE);
             }
         }
+        if(bill.getId() != null){
+            Bill existingBill = billRepository.findById(bill.getId()).orElseThrow();
+            bill.setCreatedAt(existingBill.getCreatedAt());
+            bill.setUpdatedAt(LocalDateTime.now());
+            bill.setCreatedByUsername(existingBill.getCreatedByUsername());
+            bill.setUpdatedByUsername(getLoggedUsername());
+        }
         return billRepository.createBill(bill);
+    }
+
+    public Optional<Bill> getBillById(String id){
+        return billRepository.findById(id);
     }
 
     public Bill setBillState(Bill bill){
@@ -106,5 +120,18 @@ public class BillService {
 
     public List<Bill> findBillsByDate(LocalDate date){
         return billRepository.findBillsByDate(date);
+    }
+
+    private String getLoggedUsername() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            Object principal = auth.getPrincipal();
+            if (principal instanceof UserDetails) {
+                return ((UserDetails) principal).getUsername();
+            } else {
+                return principal.toString();
+            }
+        }
+        return "anonymous";
     }
 }

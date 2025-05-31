@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: dbpassword
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - app_network
 

@@ -8,5 +8,5 @@ public interface BalanceRepository {
     void createBalance(Balance balance);
     Balance findByBalanceDate(LocalDate date);
     Balance findFirst();
-    public Balance findLast();
+    Balance findLast();
 }
